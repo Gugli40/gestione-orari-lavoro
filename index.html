@@ -2,7 +2,11 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#8B0000">
+    <meta name="description" content="Gestione professionale orari lavorativi con calcolo automatico straordinari e maggiorazioni">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Gestione Orari Lavorativi Pro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -12,6 +16,11 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+        }
+
+        button, a, input, select {
+            touch-action: manipulation;
         }
 
         body {
@@ -94,6 +103,7 @@
             border-radius: 8px;
             background: #ffffff;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow-x: auto;
         }
 
         .section h2 {
@@ -197,6 +207,7 @@
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
         }
 
@@ -384,7 +395,6 @@
             color: #8B0000;
         }
 
-        /* === STILI CALENDARIO === */
         .calendar-container {
             background: white;
             border-radius: 8px;
@@ -516,26 +526,108 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 8px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .header p {
+                font-size: 0.9em;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                flex-wrap: nowrap;
+                gap: 5px;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            
+            .tabs::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .tab {
+                padding: 12px 15px;
+                font-size: 14px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            
             .grid-2, .grid-3 {
                 grid-template-columns: 1fr;
+                gap: 15px;
             }
             
             .time-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                padding: 15px;
             }
             
-            .tabs {
-                flex-wrap: wrap;
+            .time-input {
+                padding: 12px;
             }
             
-            .tab {
-                flex: 1;
-                min-width: 100px;
+            .time-input label {
+                font-size: 11px;
+            }
+            
+            .time-input input {
+                font-size: 16px;
+                padding: 8px;
+            }
+            
+            .form-group input, 
+            .form-group select {
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            .btn {
+                padding: 14px 20px;
+                font-size: 15px;
+                width: 100%;
+            }
+            
+            .btn-small {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+            
+            .section {
+                padding: 15px;
+            }
+            
+            .timesheet-table {
+                font-size: 12px;
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            .timesheet-table th,
+            .timesheet-table td {
+                padding: 8px 4px;
+                font-size: 11px;
             }
             
             .calendar-day {
-                min-height: 60px;
-                padding: 4px;
+                min-height: 70px;
+                padding: 5px;
             }
             
             .calendar-day-number {
@@ -543,10 +635,30 @@
             }
             
             .calendar-day-info {
-                font-size: 10px;
+                font-size: 9px;
             }
             
-            /* NOVITÀ v3.0: Responsive Breakdown Straordinari */
+            .calendar-quick-add {
+                opacity: 1;
+            }
+            
+            .summary {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .summary-card {
+                padding: 20px;
+            }
+            
+            .summary-card .value {
+                font-size: 1.8em;
+            }
+            
+            .calc-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
             .section div[style*="grid-template-columns: 1fr 1fr"] {
                 display: block !important;
             }
@@ -558,22 +670,34 @@
             .overtime-item {
                 flex-direction: column !important;
                 text-align: center;
+                gap: 10px !important;
             }
             
-            .overtime-item > div:first-child {
-                margin-bottom: 10px;
+            .break-item {
+                flex-direction: column !important;
+                gap: 10px;
             }
             
-            /* Calcolo finale responsive */
+            .break-item > div {
+                width: 100% !important;
+            }
+            
             div[style*="grid-template-columns: 1fr 1fr 1fr"] {
                 display: block !important;
-                text-align: center;
             }
             
             div[style*="grid-template-columns: 1fr 1fr 1fr"] > div {
                 margin-bottom: 15px;
                 padding: 0 !important;
                 border: none !important;
+            }
+            
+            .config-item {
+                flex-wrap: wrap;
+            }
+            
+            .config-item input {
+                min-width: 100%;
             }
         }
     </style>
@@ -582,11 +706,10 @@
     <div class="container">
         <div class="header">
             <h1>💼 Gestione Orari Lavorativi Pro</h1>
-            <p>Sistema avanzato per la gestione completa degli orari di lavoro - Versione v3.1 con Filtro Mensile</p>
+            <p>Sistema avanzato per la gestione completa degli orari di lavoro - Versione v3.1 Mobile Optimized</p>
         </div>
 
         <div class="content">
-            <!-- Sistema di Tabs -->
             <div class="tabs">
                 <button class="tab active" onclick="showTab('inserimento')">⏰ Inserimento</button>
                 <button class="tab" onclick="showTab('calendario')">📅 Calendario</button>
@@ -595,19 +718,16 @@
                 <button class="tab" onclick="showTab('riepilogo')">📈 Riepilogo</button>
             </div>
 
-            <!-- TAB: Calendario -->
             <div id="tab-calendario" class="tab-content">
                 <div class="section">
                     <h2>📅 Calendario Mensile</h2>
                     
-                    <!-- Controlli Navigazione -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px; background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%); border-radius: 8px; color: white;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px; background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%); border-radius: 8px; color: white; flex-wrap: wrap; gap: 10px;">
                         <button class="btn" onclick="changeMonth(-1)" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">⬅️ Precedente</button>
                         <h3 id="calendarTitle" style="margin: 0; font-size: 1.5em; font-weight: 600;">Marzo 2025</h3>
                         <button class="btn" onclick="changeMonth(1)" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">Successivo ➡️</button>
                     </div>
                     
-                    <!-- Calendario -->
                     <div class="calendar-container">
                         <div class="calendar-header">
                             <div class="calendar-day-header">Lun</div>
@@ -619,11 +739,9 @@
                             <div class="calendar-day-header dom">Dom</div>
                         </div>
                         <div id="calendarGrid" class="calendar-grid">
-                            <!-- I giorni verranno generati dinamicamente -->
                         </div>
                     </div>
                     
-                    <!-- Legenda -->
                     <div style="margin-top: 20px; padding: 15px; background: #ffffff; border-radius: 8px; border-left: 4px solid #8B0000; border: 1px solid #e9ecef;">
                         <h4 style="margin-bottom: 10px; color: #8B0000; font-weight: 600;">📋 Legenda</h4>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 14px;">
@@ -640,21 +758,17 @@
                     </div>
                 </div>
                 
-                <!-- Dettaglio Giorno Selezionato -->
                 <div class="section" id="dayDetails" style="display: none;">
                     <h2>📋 Dettaglio Giorno Selezionato</h2>
                     <div id="dayDetailsContent">
-                        <!-- Contenuto dinamico -->
                     </div>
                 </div>
             </div>
 
-            <!-- TAB: Inserimento Orari -->
             <div id="tab-inserimento" class="tab-content active">
                 <div class="section">
                     <h2>⏰ Inserimento Giornata Lavorativa</h2>
                     
-                    <!-- Info Base -->
                     <div class="grid grid-2" style="margin-bottom: 25px;">
                         <div class="form-group">
                             <label for="workDate">📅 Data</label>
@@ -668,7 +782,6 @@
                         </div>
                     </div>
 
-                    <!-- Orari con 4 campi -->
                     <div class="time-grid">
                         <div class="time-input">
                             <label>🟢 Entrata</label>
@@ -688,15 +801,13 @@
                         </div>
                     </div>
 
-                    <!-- Pause Aggiuntive -->
                     <div class="section" style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-radius: 8px; border-left: 4px solid #17a2b8;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                             <h4 style="margin: 0; color: #17a2b8; font-weight: 600;">⏸️ Pause Aggiuntive</h4>
                             <button type="button" class="btn btn-info btn-small" onclick="addBreak()">➕ Aggiungi Pausa</button>
                         </div>
                         
                         <div id="breaksContainer">
-                            <!-- Le pause aggiuntive verranno generate dinamicamente -->
                             <div style="text-align: center; color: #6c757d; padding: 20px;">
                                 <em>Nessuna pausa aggiuntiva. La pausa principale è già inclusa sopra.</em>
                             </div>
@@ -710,7 +821,6 @@
                         </div>
                     </div>
 
-                    <!-- Calcolo Automatico -->
                     <div class="auto-calc" id="autoCalc" style="display: none;">
                         <h4>📊 Calcolo Automatico Dettagliato</h4>
                         <div class="calc-grid">
@@ -740,19 +850,17 @@
                             </div>
                         </div>
                         <div id="calcBreakdown" style="margin-top: 15px; padding: 10px; background: white; border-radius: 5px; font-size: 12px; color: #666;">
-                            <!-- Breakdown dettagliato apparirà qui -->
                         </div>
                     </div>
 
-                    <!-- Note e Azioni -->
                     <div class="grid grid-2" style="margin-top: 20px;">
                         <div class="form-group">
                             <label for="notes">📝 Note</label>
                             <input type="text" id="notes" placeholder="Note opzionali...">
                         </div>
-                        <div style="display: flex; align-items: end; gap: 10px;">
-                            <button class="btn btn-success" onclick="addWorkDay()">➕ Aggiungi Giornata</button>
-                            <button class="btn btn-info" onclick="clearForm()">🔄 Pulisci</button>
+                        <div style="display: flex; align-items: end; gap: 10px; flex-wrap: wrap;">
+                            <button class="btn btn-success" onclick="addWorkDay()" style="flex: 1; min-width: 150px;">➕ Aggiungi Giornata</button>
+                            <button class="btn btn-info" onclick="clearForm()" style="flex: 1; min-width: 150px;">🔄 Pulisci</button>
                         </div>
                     </div>
 
@@ -760,9 +868,7 @@
                 </div>
             </div>
 
-            <!-- TAB: Configurazione -->
             <div id="tab-configurazione" class="tab-content">
-                <!-- Configurazione Base -->
                 <div class="section">
                     <h2>⚙️ Configurazione Base</h2>
                     <div class="grid grid-3">
@@ -792,7 +898,6 @@
                     </div>
                 </div>
 
-                <!-- Tipi Trasferte -->
                 <div class="section">
                     <h2>✈️ Gestione Tipi Trasferte</h2>
                     <div style="margin-bottom: 20px;">
@@ -814,7 +919,6 @@
                 </div>
             </div>
 
-            <!-- TAB: Registro -->
             <div id="tab-registro" class="tab-content">
                 <div class="section">
                     <h2>📊 Registro Orari Completo</h2>
@@ -840,32 +944,28 @@
                                 </tr>
                             </thead>
                             <tbody id="timesheet-body">
-                                <!-- Dati inseriti dinamicamente -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB: Riepilogo -->
             <div id="tab-riepilogo" class="tab-content">
-                <!-- NUOVO: Selettore Mese -->
                 <div style="margin-bottom: 20px; padding: 20px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-radius: 8px; border-left: 4px solid #4a90e2; border: 1px solid #e9ecef;">
                     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
-                        <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                             <label for="monthSelector" style="font-weight: 600; color: #4a90e2; font-size: 16px;">📅 Visualizza mese:</label>
                             <select id="monthSelector" onchange="updateMonthFilter()" style="padding: 10px 15px; border: 2px solid #4a90e2; border-radius: 6px; font-size: 16px; font-weight: 500; background: white; min-width: 200px;">
                                 <option value="">Caricamento...</option>
                             </select>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 20px; color: #6c757d; font-size: 14px;">
-                            <span>📊 Giornate trovate: <strong id="monthDaysCount" style="color: #4a90e2;">0</strong></span>
-                            <span>💼 Ore totali: <strong id="monthHoursCount" style="color: #198754;">0h</strong></span>
+                        <div style="display: flex; align-items: center; gap: 20px; color: #6c757d; font-size: 14px; flex-wrap: wrap;">
+                            <span>📊 Giornate: <strong id="monthDaysCount" style="color: #4a90e2;">0</strong></span>
+                            <span>💼 Ore: <strong id="monthHoursCount" style="color: #198754;">0h</strong></span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Summary Cards Principale -->
                 <div class="summary">
                     <div class="summary-card">
                         <h3>Ore Ordinarie Lavorate</h3>
@@ -889,7 +989,6 @@
                     </div>
                 </div>
 
-                <!-- NUOVA SEZIONE: Breakdown Dettagliato Straordinari -->
                 <div class="section" style="margin-top: 30px;">
                     <div style="background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
                         <h2 style="margin: 0; color: white; border: none; padding: 0;">⚡ BREAKDOWN DETTAGLIATO STRAORDINARI E MAGGIORAZIONI</h2>
@@ -897,11 +996,9 @@
                     </div>
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px;">
-                        <!-- Colonna Sinistra: Straordinari per Tipo Giorno -->
                         <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef;">
                             <h3 style="color: #8B0000; margin-bottom: 20px; font-size: 1.2em; border-bottom: 2px solid #8B0000; padding-bottom: 10px;">📅 Straordinari per Tipo Giorno</h3>
                             
-                            <!-- Feriali -->
                             <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 10px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #198754;">
                                 <div>
                                     <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">🟢 Feriali (oltre 8h) +25%</div>
@@ -910,7 +1007,6 @@
                                 <div style="font-size: 18px; font-weight: 700; color: #198754;" id="weekdayAmount">€0.00</div>
                             </div>
                             
-                            <!-- Sabato 1-3h -->
                             <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 10px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #ff9800;">
                                 <div>
                                     <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">🟠 Sabato (prime 3h) +25%</div>
@@ -919,7 +1015,6 @@
                                 <div style="font-size: 18px; font-weight: 700; color: #ff9800;" id="saturdayFirstAmount">€0.00</div>
                             </div>
                             
-                            <!-- Sabato oltre 3h -->
                             <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 10px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #ff5722;">
                                 <div>
                                     <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">🔴 Sabato (oltre 3h) +50%</div>
@@ -928,7 +1023,6 @@
                                 <div style="font-size: 18px; font-weight: 700; color: #ff5722;" id="saturdayRestAmount">€0.00</div>
                             </div>
                             
-                            <!-- Domenica -->
                             <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 15px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #dc3545;">
                                 <div>
                                     <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">🔴 Domenica (tutto) +45%</div>
@@ -937,7 +1031,6 @@
                                 <div style="font-size: 18px; font-weight: 700; color: #dc3545;" id="sundayAmount">€0.00</div>
                             </div>
                             
-                            <!-- Subtotale Straordinari -->
                             <div style="padding: 15px; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius: 6px; border: 1px solid #2196f3;">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span style="font-weight: 600; color: #1976d2;">📊 Subtotale Straordinari:</span>
@@ -946,11 +1039,9 @@
                             </div>
                         </div>
                         
-                        <!-- Colonna Destra: Maggiorazioni Speciali -->
                         <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef;">
                             <h3 style="color: #8B0000; margin-bottom: 20px; font-size: 1.2em; border-bottom: 2px solid #8B0000; padding-bottom: 10px;">🌙 Maggiorazioni Speciali</h3>
                             
-                            <!-- Notturno Normale -->
                             <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 10px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #4a90e2;">
                                 <div>
                                     <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">🌙 Notturno Normale +15%</div>
@@ -959,7 +1050,6 @@
                                 <div style="font-size: 18px; font-weight: 700; color: #4a90e2;" id="nightNormalAmount">€0.00</div>
                             </div>
                             
-                            <!-- Notturno Straordinario -->
                             <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 10px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #673ab7;">
                                 <div>
                                     <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">🌜 Notturno Straord. +55%</div>
@@ -968,7 +1058,6 @@
                                 <div style="font-size: 18px; font-weight: 700; color: #673ab7;" id="nightOvertimeAmount">€0.00</div>
                             </div>
                             
-                            <!-- Trasferte -->
                             <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 15px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #00bcd4;">
                                 <div>
                                     <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">✈️ Trasferte</div>
@@ -977,7 +1066,6 @@
                                 <div style="font-size: 18px; font-weight: 700; color: #00bcd4;" id="travelAmount">€0.00</div>
                             </div>
                             
-                            <!-- Subtotale Maggiorazioni -->
                             <div style="padding: 15px; background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-radius: 6px; border: 1px solid #9c27b0; margin-bottom: 15px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span style="font-weight: 600; color: #7b1fa2;">🎯 Subtotale Maggiorazioni:</span>
@@ -985,7 +1073,6 @@
                                 </div>
                             </div>
                             
-                            <!-- Totale Generale Maggiorazioni -->
                             <div style="padding: 15px; background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%); border-radius: 6px; border: 1px solid #4caf50;">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span style="font-weight: 600; color: #2e7d32;">💰 TOTALE MAGGIORAZIONI:</span>
@@ -995,7 +1082,6 @@
                         </div>
                     </div>
                     
-                    <!-- Calcolo Finale -->
                     <div style="background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%); color: white; padding: 25px; border-radius: 8px; text-align: center;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: center;">
                             <div>
@@ -1014,7 +1100,6 @@
                     </div>
                 </div>
 
-                <!-- Azioni -->
                 <div class="section">
                     <h2>🔧 Azioni</h2>
                     <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px;">
@@ -1024,30 +1109,16 @@
                         <button class="btn btn-danger" onclick="clearAllData()">🗑️ Cancella Tutto</button>
                         <button class="btn" onclick="saveConfig()">💾 Forza Salvataggio</button>
                     </div>
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px;">
-                        <button class="btn btn-info" onclick="safeExcelImport()">🛡️ Import Sicuro</button>
-                        <button class="btn btn-warning" onclick="testOvertimeCalculation()">🧪 Test Calcoli</button>
-                        <button class="btn" onclick="checkConfigBeforeImport()">🔍 Verifica Config</button>
-                    </div>
                     <div style="margin-top: 15px; padding: 15px; background: #ffffff; border-radius: 8px; border-left: 4px solid #0dcaf0; border: 1px solid #e9ecef;">
-                        <h4 style="margin-bottom: 10px; color: #0dcaf0; font-weight: 600;">ℹ️ Informazioni v3.1 - Filtro per Mese</h4>
+                        <h4 style="margin-bottom: 10px; color: #0dcaf0; font-weight: 600;">ℹ️ Informazioni v3.1 Mobile Optimized</h4>
                         <p style="margin: 5px 0; font-size: 14px; color: #495057;">
                             <strong>Novità v3.1:</strong> Riepilogo separato per ogni mese + Export per mese selezionato!
                         </p>
                         <p style="margin: 5px 0; font-size: 14px; color: #495057;">
-                            <strong>Filtro Mese:</strong> Seleziona il mese per vedere solo le giornate di quel periodo
+                            <strong>Mobile:</strong> Interfaccia ottimizzata per smartphone e tablet
                         </p>
                         <p style="margin: 5px 0; font-size: 14px; color: #495057;">
-                            <strong>Excel/PDF:</strong> Esportano solo i dati del mese selezionato
-                        </p>
-                        <p style="margin: 5px 0; font-size: 14px; color: #495057;">
-                            <strong>Import Sicuro:</strong> Con backup automatico e possibilità rollback
-                        </p>
-                        <p style="margin: 5px 0; font-size: 14px; color: #495057;">
-                            <strong>Test Calcoli:</strong> Verifica il corretto funzionamento degli straordinari
-                        </p>
-                        <p style="margin: 5px 0; font-size: 14px; color: #495057;">
-                            <strong>Nota:</strong> Le configurazioni si salvano automaticamente nel browser (F12 per debug)
+                            <strong>Nota:</strong> Le configurazioni si salvano automaticamente nel browser
                         </p>
                     </div>
                 </div>
@@ -1056,7 +1127,6 @@
     </div>
 
     <script>
-        // === VARIABILI GLOBALI ===
         let workDays = [];
         let travelTypes = [
             { name: 'In Regione', amount: 10 },
@@ -1064,52 +1134,36 @@
             { name: 'Estero', amount: 25 }
         ];
         
-        // Variabili calendario
         let currentCalendarDate = new Date();
         let selectedCalendarDay = null;
-        
-        // Array per pause aggiuntive
         let additionalBreaks = [];
         let breakCounter = 0;
 
-        // === INIZIALIZZAZIONE ===
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
         });
 
         function initializeApp() {
-            console.log('🚀 Inizializzazione Gestione Orari Pro v3.1 - Filtro per Mese Attivo');
+            console.log('🚀 Inizializzazione Gestione Orari Pro v3.1 Mobile Optimized');
             
-            // Carica configurazione e dati salvati
             const configLoaded = loadConfig();
             const workDaysCount = loadWorkDays();
             
-            // Imposta data corrente
             document.getElementById('workDate').value = new Date().toISOString().split('T')[0];
             
-            // Inizializza pause aggiuntive
             additionalBreaks = [];
             breakCounter = 0;
             renderBreaks();
             
-            // Aggiorna tutti i dropdown e tabelle
             updateTravelDropdown();
             updateTravelList();
             updateTable();
-            
-            // *** NOVITÀ v3.1: Popola selettore mese e aggiorna riepilogo ***
             populateMonthSelector();
             updateSummary();
-            
             generateCalendar();
-            
-            // Aggiunge listener per calcolo automatico
             addCalculationListeners();
-            
-            // Aggiunge listener per salvataggio automatico configurazione
             addConfigListeners();
             
-            // Mostra messaggio di caricamento
             if (configLoaded || workDaysCount > 0) {
                 let message = '✅ ';
                 if (configLoaded) message += 'Configurazione caricata';
@@ -1117,21 +1171,19 @@
                     if (message.length > 3) message += ' + ';
                     message += `${workDaysCount} giornate caricate`;
                 }
-                message += ' dal browser - v3.1 con Filtro per Mese attivo!';
+                message += ' - v3.1 Mobile Optimized attivo!';
                 showMessage(message, 'success');
             }
             
-            console.log('📊 Sistema v3.1 pronto - Import Excel corretto + Breakdown Straordinari + Filtro Mensile');
+            console.log('📱 Sistema v3.1 Mobile pronto');
         }
 
         function addConfigListeners() {
-            // Salva automaticamente quando si modificano le impostazioni base
             ['hourlyRate', 'standardHours', 'standardBreak'].forEach(id => {
                 document.getElementById(id).addEventListener('change', autoSaveConfig);
             });
         }
 
-        // === GESTIONE PAUSE AGGIUNTIVE ===
         function addBreak() {
             breakCounter++;
             const breakId = `break_${breakCounter}`;
@@ -1145,7 +1197,6 @@
             additionalBreaks.push(breakItem);
             renderBreaks();
             
-            // Focus sul primo campo della nuova pausa
             setTimeout(() => {
                 document.getElementById(`${breakId}_start`).focus();
             }, 100);
@@ -1183,14 +1234,14 @@
                                 <label style="font-size: 12px; color: #6c757d; margin-bottom: 5px; display: block;">Inizio</label>
                                 <input type="time" id="${breakItem.id}_start" value="${breakItem.start}" 
                                        onchange="updateBreak('${breakItem.id}', 'start', this.value)"
-                                       style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                                       style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 16px;">
                             </div>
                             <div style="text-align: center; color: #6c757d; font-weight: bold;">→</div>
                             <div>
                                 <label style="font-size: 12px; color: #6c757d; margin-bottom: 5px; display: block;">Fine</label>
                                 <input type="time" id="${breakItem.id}_end" value="${breakItem.end}"
                                        onchange="updateBreak('${breakItem.id}', 'end', this.value)"
-                                       style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                                       style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 16px;">
                             </div>
                         </div>
                         <div style="flex: 0 0 auto;">
@@ -1264,7 +1315,6 @@
                 exit = new Date(`2000-01-02T${exitTime}`);
             }
             
-            // Valida pausa principale
             if (breakStart && breakEnd) {
                 const mainBreakStart = new Date(`2000-01-01T${breakStart}`);
                 let mainBreakEnd = new Date(`2000-01-01T${breakEnd}`);
@@ -1278,7 +1328,6 @@
                 }
             }
             
-            // Valida pause aggiuntive
             for (let i = 0; i < additionalBreaks.length; i++) {
                 const breakItem = additionalBreaks[i];
                 
@@ -1294,7 +1343,6 @@
                         return `La pausa aggiuntiva ${i + 1} deve essere compresa tra entrata e uscita`;
                     }
                     
-                    // Verifica sovrapposizioni con pausa principale
                     if (breakStart && breakEnd) {
                         const mainBreakStart = new Date(`2000-01-01T${breakStart}`);
                         let mainBreakEnd = new Date(`2000-01-01T${breakEnd}`);
@@ -1308,7 +1356,6 @@
                         }
                     }
                     
-                    // Verifica sovrapposizioni con altre pause aggiuntive
                     for (let j = i + 1; j < additionalBreaks.length; j++) {
                         const otherBreak = additionalBreaks[j];
                         if (otherBreak.start && otherBreak.end) {
@@ -1331,7 +1378,6 @@
         }
 
         function showTab(tabName) {
-            // Nasconde tutti i tab
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -1339,12 +1385,10 @@
                 tab.classList.remove('active');
             });
             
-            // Mostra il tab selezionato
             document.getElementById(`tab-${tabName}`).classList.add('active');
             event.target.classList.add('active');
         }
 
-        // === GESTIONE TIPI TRASFERTE ===
         function addTravelType() {
             const name = document.getElementById('newTravelName').value.trim();
             const amount = parseFloat(document.getElementById('newTravelAmount').value);
@@ -1400,8 +1444,8 @@
                 const item = document.createElement('div');
                 item.className = 'config-item';
                 item.innerHTML = `
-                    <input type="text" value="${type.name}" onchange="updateTravelName(${index}, this.value)" style="flex: 2;">
-                    <input type="number" value="${type.amount}" onchange="updateTravelAmount(${index}, this.value)" style="flex: 1;" step="0.50">
+                    <input type="text" value="${type.name}" onchange="updateTravelName(${index}, this.value)" style="flex: 2; font-size: 16px;">
+                    <input type="number" value="${type.amount}" onchange="updateTravelAmount(${index}, this.value)" style="flex: 1; font-size: 16px;" step="0.50">
                     <span>€</span>
                     <button class="btn btn-small btn-danger" onclick="removeTravelType(${index})">🗑️</button>
                 `;
@@ -1421,10 +1465,11 @@
             autoSaveConfig();
         }
 
-        // === EXPORT PDF ===
-        function exportToPDF() {
-            if (workDays.length === 0) {
-                showMessage('Non ci sono dati da esportare', 'error');
+        function exportToPDFFiltered() {
+            const filteredDays = getFilteredDaysByMonth();
+            
+            if (filteredDays.length === 0) {
+                showMessage('Non ci sono dati per il mese selezionato da esportare', 'error');
                 return;
             }
 
@@ -1439,49 +1484,34 @@
                 const pageWidth = doc.internal.pageSize.width;
                 const pageHeight = doc.internal.pageSize.height;
                 const margin = 20;
+                const currentMonth = getCurrentMonthName();
                 
-                // === INTESTAZIONE ===
                 doc.setFontSize(20);
                 doc.setTextColor(139, 0, 0);
-                doc.text('REGISTRO ORARI LAVORATIVI', pageWidth / 2, 30, { align: 'center' });
+                doc.text(`REGISTRO ORARI - ${currentMonth.toUpperCase()}`, pageWidth / 2, 30, { align: 'center' });
                 
                 doc.setFontSize(12);
                 doc.setTextColor(100, 100, 100);
                 const today = new Date().toLocaleDateString('it-IT');
                 doc.text(`Generato il: ${today}`, pageWidth / 2, 40, { align: 'center' });
                 
-                // === RIEPILOGO GENERALE ===
-                const completeDays = workDays.filter(day => day.status === 'completo');
-                const standardHours = parseFloat(document.getElementById('standardHours').value) || 8;
-                
-                // Calcola ore ordinarie (solo feriali entro 8h)
-                const regularHours = completeDays.reduce((sum, day) => {
-                    const workHours = parseFloat(day.workHours);
-                    const dayOfWeek = new Date(day.date).getDay();
-                    if (dayOfWeek === 0 || dayOfWeek === 6) return sum; // Weekend: 0 ore ordinarie
-                    return sum + Math.min(workHours, standardHours);
-                }, 0);
-                
-                const overtimeHours = completeDays.reduce((sum, day) => sum + parseFloat(day.overtimeHours), 0);
-                const nightHours = completeDays.reduce((sum, day) => sum + parseFloat(day.nightHours || 0), 0);
-                const travelDays = completeDays.filter(day => day.travelType).length;
-                const monthlyTotal = completeDays.reduce((sum, day) => sum + parseFloat(day.dailyPay), 0);
+                const monthlyData = calculateMonthlyTotals(filteredDays);
                 
                 let yPos = 55;
                 doc.setFontSize(14);
                 doc.setTextColor(0, 0, 0);
-                doc.text('RIEPILOGO MENSILE', margin, yPos);
+                doc.text(`RIEPILOGO ${currentMonth.toUpperCase()}`, margin, yPos);
                 
                 yPos += 10;
                 doc.setFontSize(10);
                 doc.setTextColor(50, 50, 50);
                 
                 const summaryData = [
-                    [`Ore Ordinarie Lavorate:`, formatHours(regularHours)],
-                    [`Ore Straordinari:`, formatHours(overtimeHours)],
-                    [`Ore Notturne:`, formatHours(nightHours)],
-                    [`Giorni Trasferta:`, travelDays.toString()],
-                    [`TOTALE COMPENSO:`, `€${monthlyTotal.toFixed(2)}`]
+                    [`Ore Ordinarie Lavorate:`, formatHours(monthlyData.regularHours)],
+                    [`Ore Straordinari:`, formatHours(monthlyData.overtimeHours)],
+                    [`Ore Notturne:`, formatHours(monthlyData.nightHours)],
+                    [`Giorni Trasferta:`, monthlyData.travelDays.toString()],
+                    [`TOTALE COMPENSO:`, `€${monthlyData.monthlyTotal.toFixed(2)}`]
                 ];
                 
                 summaryData.forEach(([label, value], index) => {
@@ -1499,7 +1529,7 @@
                 
                 yPos += 45;
                 
-                const tableData = workDays.map(day => [
+                const tableData = filteredDays.map(day => [
                     formatDate(day.date),
                     day.entryTime,
                     day.breakStart || '--',
@@ -1559,14 +1589,14 @@
                         doc.setFontSize(8);
                         doc.setTextColor(150, 150, 150);
                         doc.text(`Pagina ${data.pageNumber}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
-                        doc.text('Generato con Gestione Orari Lavorativi Pro v3.0 - Breakdown Straordinari', margin, pageHeight - 10);
+                        doc.text('Generato con Gestione Orari Lavorativi Pro v3.1 Mobile', margin, pageHeight - 10);
                     }
                 });
                 
-                const fileName = `registro_orari_${new Date().toISOString().split('T')[0]}.pdf`;
+                const fileName = `registro_${currentMonth.toLowerCase().replace(' ', '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
                 doc.save(fileName);
                 
-                showMessage('PDF generato e scaricato con successo!', 'success');
+                showMessage(`PDF per ${currentMonth} generato con successo!`, 'success');
                 
             } catch (error) {
                 console.error('Errore export PDF:', error);
@@ -1574,14 +1604,17 @@
             }
         }
 
-        // === EXPORT EXCEL ===
-        function exportToExcel() {
-            if (workDays.length === 0) {
-                showMessage('Non ci sono dati da esportare', 'error');
+        function exportToExcelFiltered() {
+            const filteredDays = getFilteredDaysByMonth();
+            
+            if (filteredDays.length === 0) {
+                showMessage('Non ci sono dati per il mese selezionato da esportare', 'error');
                 return;
             }
 
-            const exportData = workDays.map(day => ({
+            const currentMonth = getCurrentMonthName();
+            
+            const exportData = filteredDays.map(day => ({
                 'Data': formatDate(day.date),
                 'Entrata': day.entryTime,
                 'Pausa': day.breakStart || '--',
@@ -1600,30 +1633,32 @@
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(exportData);
             
+            const monthlyData = calculateMonthlyTotals(filteredDays);
+            
             const summary = [
-                ['RIEPILOGO MENSILE'],
+                [`RIEPILOGO MENSILE - ${currentMonth.toUpperCase()}`],
                 [''],
-                ['Ore Ordinarie Lavorate:', document.getElementById('regularHours').textContent],
-                ['Ore Straordinari:', document.getElementById('overtimeHours').textContent],
-                ['Ore Notturne:', document.getElementById('nightHours').textContent],
-                ['Giorni Trasferta:', document.getElementById('travelDays').textContent],
-                ['Totale Mensile:', document.getElementById('monthlyTotal').textContent]
+                ['Ore Ordinarie Lavorate:', formatHours(monthlyData.regularHours)],
+                ['Ore Straordinari:', formatHours(monthlyData.overtimeHours)],
+                ['Ore Notturne:', formatHours(monthlyData.nightHours)],
+                ['Giorni Trasferta:', monthlyData.travelDays.toString()],
+                ['Totale Mensile:', `€${monthlyData.monthlyTotal.toFixed(2)}`]
             ];
             
             XLSX.utils.book_append_sheet(wb, ws, 'Orari Dettagliati');
             XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(summary), 'Riepilogo');
 
-            const fileName = `orari_lavorativi_${new Date().toISOString().split('T')[0]}.xlsx`;
+            const fileName = `orari_${currentMonth.toLowerCase().replace(' ', '_')}_${new Date().toISOString().split('T')[0]}.xlsx`;
             XLSX.writeFile(wb, fileName);
             
-            showMessage('File Excel esportato con successo!', 'success');
+            showMessage(`File Excel per ${currentMonth} esportato con successo!`, 'success');
         }
 
         function clearAllData() {
             if (confirm('Sei sicuro di voler cancellare tutti i dati? Questa operazione non può essere annullata.')) {
                 workDays = [];
                 updateTable();
-                populateMonthSelector(); // NOVITÀ v3.1: Aggiorna selettore mese
+                populateMonthSelector();
                 updateSummary();
                 generateCalendar();
                 autoSaveWorkDays();
@@ -1631,7 +1666,6 @@
             }
         }
 
-        // === CALCOLO AUTOMATICO ===
         function addCalculationListeners() {
             const timeInputs = ['entryTime', 'breakStart', 'breakEnd', 'exitTime'];
             const typeInputs = ['travelType'];
@@ -1759,7 +1793,6 @@
             document.getElementById('calcBreakdown').innerHTML = breakdown;
         }
 
-        // === GESTIONE CALENDARIO ===
         function generateCalendar() {
             const year = currentCalendarDate.getFullYear();
             const month = currentCalendarDate.getMonth();
@@ -1965,9 +1998,9 @@
                 }
                 
                 content += `
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn btn-info" onclick="editDay('${dateString}')">✏️ ${workData.status === 'completo' ? 'Modifica' : 'Completa'}</button>
-                        <button class="btn btn-danger" onclick="deleteDay('${dateString}')">🗑️ Elimina</button>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-info" onclick="editDay('${dateString}')" style="flex: 1; min-width: 150px;">✏️ ${workData.status === 'completo' ? 'Modifica' : 'Completa'}</button>
+                        <button class="btn btn-danger" onclick="deleteDay('${dateString}')" style="flex: 1; min-width: 150px;">🗑️ Elimina</button>
                     </div>
                 `;
             } else {
@@ -2276,7 +2309,6 @@
             };
         }
 
-        // === GESTIONE GIORNATE LAVORATIVE ===
         function addWorkDay() {
             const date = document.getElementById('workDate').value;
             const entryTime = document.getElementById('entryTime').value;
@@ -2355,7 +2387,7 @@
             workDays.sort((a, b) => new Date(a.date) - new Date(b.date));
 
             updateTable();
-            populateMonthSelector(); // NOVITÀ v3.1: Aggiorna selettore mese
+            populateMonthSelector();
             updateSummary();
             generateCalendar();
             autoSaveWorkDays();
@@ -2370,7 +2402,7 @@
             if (confirm('Sei sicuro di voler eliminare questa giornata?')) {
                 workDays.splice(index, 1);
                 updateTable();
-                populateMonthSelector(); // NOVITÀ v3.1: Aggiorna selettore mese
+                populateMonthSelector();
                 updateSummary();
                 generateCalendar();
                 autoSaveWorkDays();
@@ -2396,7 +2428,6 @@
             document.getElementById('workDate').value = currentDate.toISOString().split('T')[0];
         }
 
-        // === AGGIORNAMENTO VISUALIZZAZIONI ===
         function updateTable() {
             const tbody = document.getElementById('timesheet-body');
             tbody.innerHTML = '';
@@ -2450,8 +2481,6 @@
             });
         }
 
-        // === NUOVE FUNZIONI v3.1: FILTRO PER MESE ===
-        
         function populateMonthSelector() {
             const selector = document.getElementById('monthSelector');
             
@@ -2460,7 +2489,6 @@
                 return;
             }
             
-            // Estrai tutti i mesi univoci dai dati
             const monthsSet = new Set();
             workDays.forEach(day => {
                 const date = new Date(day.date);
@@ -2468,8 +2496,7 @@
                 monthsSet.add(monthKey);
             });
             
-            // Converti in array e ordina
-            const months = Array.from(monthsSet).sort().reverse(); // Più recenti prima
+            const months = Array.from(monthsSet).sort().reverse();
             
             selector.innerHTML = '';
             
@@ -2484,16 +2511,12 @@
                 selector.appendChild(option);
             });
             
-            // Seleziona il mese più recente
             if (months.length > 0) {
                 selector.value = months[0];
             }
-            
-            console.log('📅 Selettore mese popolato con', months.length, 'mesi:', months);
         }
         
         function updateMonthFilter() {
-            console.log('🔄 Aggiornamento filtro mese...');
             updateSummary();
         }
         
@@ -2512,7 +2535,6 @@
                 return monthKey === selectedMonth;
             });
             
-            console.log(`📊 Filtrati ${filteredDays.length} giorni per mese ${selectedMonth}`);
             return filteredDays;
         }
         
@@ -2528,24 +2550,20 @@
         }
 
         function updateSummary() {
-            const completeDays = getFilteredDaysByMonth(); // NOVITÀ: Usa dati filtrati per mese
+            const completeDays = getFilteredDaysByMonth();
             const incompleteDays = workDays.filter(day => day.status !== 'completo');
             const standardHours = parseFloat(document.getElementById('standardHours').value) || 8;
             
-            // Aggiorna contatori nel selettore mese
             document.getElementById('monthDaysCount').textContent = completeDays.length;
             
-            // NUOVO: Calcola ore ordinarie (solo entro le 8h per giorno nei feriali)
             const regularHours = completeDays.reduce((sum, day) => {
                 const workHours = parseFloat(day.workHours);
                 const dayOfWeek = new Date(day.date).getDay();
                 
-                // Per weekend, le "ore ordinarie" sono 0 perché tutto è straordinario
                 if (dayOfWeek === 0 || dayOfWeek === 6) {
-                    return sum; // Weekend: 0 ore ordinarie
+                    return sum;
                 }
                 
-                // Per feriali: massimo 8h ordinarie per giorno
                 return sum + Math.min(workHours, standardHours);
             }, 0);
             
@@ -2555,10 +2573,8 @@
             const travelDays = completeDays.filter(day => day.travelType).length;
             const monthlyTotal = completeDays.reduce((sum, day) => sum + parseFloat(day.dailyPay), 0);
 
-            // Aggiorna contatori aggiuntivi
             document.getElementById('monthHoursCount').textContent = formatHours(totalWorkHours);
 
-            // AGGIORNATO: Usa regularHours invece di totalHours
             document.getElementById('regularHours').textContent = formatHours(regularHours);
             document.getElementById('overtimeHours').textContent = formatHours(overtimeHours);
             document.getElementById('nightHours').textContent = formatHours(nightHours);
@@ -2570,207 +2586,170 @@
             }
             document.getElementById('monthlyTotal').textContent = totalText;
             
-            // Aggiorna subtitle del breakdown con il mese corrente
             const currentMonth = getCurrentMonthName();
             document.getElementById('breakdownSubtitle').textContent = 
                 `Analisi completa di tutti i compensi aggiuntivi di ${currentMonth}`;
             
-            // *** NOVITÀ v3.0: Calcola e aggiorna breakdown dettagliato per il mese ***
             updateOvertimeBreakdown(completeDays);
         }
-
-        // === NUOVE FUNZIONI EXPORT FILTRATE PER MESE v3.1 ===
         
-        function exportToExcelFiltered() {
-            const filteredDays = getFilteredDaysByMonth();
+        function updateOvertimeBreakdown(completeDays) {
+            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+            const breakdown = calculateOvertimeBreakdown(completeDays, hourlyRate);
             
-            if (filteredDays.length === 0) {
-                showMessage('Non ci sono dati per il mese selezionato da esportare', 'error');
-                return;
-            }
+            populateBreakdownDisplay(breakdown, hourlyRate);
+        }
 
-            const currentMonth = getCurrentMonthName();
+        function calculateOvertimeBreakdown(completeDays, hourlyRate) {
+            let breakdown = {
+                weekdayOvertime: 0,
+                saturdayFirst3: 0,
+                saturdayRest: 0,
+                sundayAll: 0,
+                nightNormal: 0,
+                nightOvertime: 0,
+                travelDays: 0,
+                travelAmount: 0,
+                amounts: {
+                    weekday: 0,
+                    saturdayFirst: 0,
+                    saturdayRest: 0,
+                    sunday: 0,
+                    nightNormal: 0,
+                    nightOvertime: 0,
+                    travel: 0
+                }
+            };
             
-            const exportData = filteredDays.map(day => ({
-                'Data': formatDate(day.date),
-                'Entrata': day.entryTime,
-                'Pausa': day.breakStart || '--',
-                'Rientro': day.breakEnd || '--',
-                'Uscita': day.exitTime,
-                'Pausa Totale': day.breakTime,
-                'Ore Lavorate': formatHours(parseFloat(day.workHours)),
-                'Straordinari': formatHours(parseFloat(day.overtimeHours)),
-                'Ore Notturne': formatHours(parseFloat(day.nightHours || 0)),
-                'Tipo Giorno': day.dayType || 'Feriale',
-                'Tipo Trasferta': day.travelType || '--',
-                'Compenso (€)': day.dailyPay,
-                'Note': day.notes
-            }));
-
-            const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.json_to_sheet(exportData);
+            completeDays.forEach(day => {
+                const workDate = new Date(day.date);
+                const dayOfWeek = workDate.getDay();
+                const workHours = parseFloat(day.workHours);
+                const nightHours = parseFloat(day.nightHours || 0);
+                const standardHours = parseFloat(document.getElementById('standardHours').value) || 8;
+                
+                if (dayOfWeek === 0) {
+                    breakdown.sundayAll += workHours;
+                    breakdown.amounts.sunday += workHours * hourlyRate * 1.45;
+                } else if (dayOfWeek === 6) {
+                    const first3Hours = Math.min(workHours, 3);
+                    const restHours = Math.max(0, workHours - 3);
+                    
+                    breakdown.saturdayFirst3 += first3Hours;
+                    breakdown.saturdayRest += restHours;
+                    
+                    breakdown.amounts.saturdayFirst += first3Hours * hourlyRate * 1.25;
+                    breakdown.amounts.saturdayRest += restHours * hourlyRate * 1.50;
+                    
+                    if (nightHours > 0) {
+                        const nightNormalRate = Math.min(nightHours, 3) * hourlyRate * 0.15;
+                        const nightOvertimeRate = Math.max(0, nightHours - 3) * hourlyRate * 0.05;
+                        breakdown.amounts.saturdayFirst += nightNormalRate;
+                        breakdown.amounts.saturdayRest += nightOvertimeRate;
+                    }
+                } else {
+                    const regularHours = Math.min(workHours, standardHours);
+                    const overtimeHours = Math.max(0, workHours - standardHours);
+                    
+                    const preciseResult = calculatePreciseHoursForBreakdown(workDate, workHours, nightHours);
+                    
+                    breakdown.weekdayOvertime += overtimeHours;
+                    
+                    const overtimeDayHours = overtimeHours - preciseResult.overtimeNightHours;
+                    
+                    breakdown.amounts.weekday += overtimeDayHours * hourlyRate * 1.25;
+                    breakdown.amounts.weekday += preciseResult.overtimeNightHours * hourlyRate * 1.55;
+                    
+                    breakdown.nightNormal += preciseResult.regularNightHours;
+                    breakdown.nightOvertime += preciseResult.overtimeNightHours;
+                    
+                    breakdown.amounts.nightNormal += preciseResult.regularNightHours * hourlyRate * 0.15;
+                    breakdown.amounts.nightOvertime += preciseResult.overtimeNightHours * hourlyRate * 0.55;
+                }
+                
+                if (day.travelType) {
+                    breakdown.travelDays++;
+                    const travelType = travelTypes.find(t => t.name === day.travelType);
+                    if (travelType) {
+                        breakdown.travelAmount += travelType.amount;
+                        breakdown.amounts.travel += travelType.amount;
+                    }
+                }
+            });
             
-            // Calcola riepilogo per il mese
-            const monthlyData = calculateMonthlyTotals(filteredDays);
-            
-            const summary = [
-                [`RIEPILOGO MENSILE - ${currentMonth.toUpperCase()}`],
-                [''],
-                ['Ore Ordinarie Lavorate:', formatHours(monthlyData.regularHours)],
-                ['Ore Straordinari:', formatHours(monthlyData.overtimeHours)],
-                ['Ore Notturne:', formatHours(monthlyData.nightHours)],
-                ['Giorni Trasferta:', monthlyData.travelDays.toString()],
-                ['Totale Mensile:', `€${monthlyData.monthlyTotal.toFixed(2)}`]
-            ];
-            
-            XLSX.utils.book_append_sheet(wb, ws, 'Orari Dettagliati');
-            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(summary), 'Riepilogo');
-
-            const fileName = `orari_${currentMonth.toLowerCase().replace(' ', '_')}_${new Date().toISOString().split('T')[0]}.xlsx`;
-            XLSX.writeFile(wb, fileName);
-            
-            showMessage(`File Excel per ${currentMonth} esportato con successo!`, 'success');
+            return breakdown;
         }
         
-        function exportToPDFFiltered() {
-            const filteredDays = getFilteredDaysByMonth();
+        function calculatePreciseHoursForBreakdown(workDate, totalWorkHours, nightHours) {
+            const standardHours = parseFloat(document.getElementById('standardHours').value) || 8;
             
-            if (filteredDays.length === 0) {
-                showMessage('Non ci sono dati per il mese selezionato da esportare', 'error');
-                return;
+            const regularHours = Math.min(totalWorkHours, standardHours);
+            const overtimeHours = Math.max(0, totalWorkHours - standardHours);
+            
+            let regularNightHours = 0;
+            let overtimeNightHours = 0;
+            
+            if (nightHours > 0) {
+                const regularRatio = regularHours / totalWorkHours;
+                const overtimeRatio = overtimeHours / totalWorkHours;
+                
+                regularNightHours = nightHours * regularRatio;
+                overtimeNightHours = nightHours * overtimeRatio;
             }
+            
+            return {
+                regularNightHours,
+                overtimeNightHours
+            };
+        }
 
-            try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({
-                    orientation: 'landscape',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-                
-                const pageWidth = doc.internal.pageSize.width;
-                const pageHeight = doc.internal.pageSize.height;
-                const margin = 20;
-                const currentMonth = getCurrentMonthName();
-                
-                // === INTESTAZIONE ===
-                doc.setFontSize(20);
-                doc.setTextColor(139, 0, 0);
-                doc.text(`REGISTRO ORARI - ${currentMonth.toUpperCase()}`, pageWidth / 2, 30, { align: 'center' });
-                
-                doc.setFontSize(12);
-                doc.setTextColor(100, 100, 100);
-                const today = new Date().toLocaleDateString('it-IT');
-                doc.text(`Generato il: ${today}`, pageWidth / 2, 40, { align: 'center' });
-                
-                // === RIEPILOGO MENSILE ===
-                const monthlyData = calculateMonthlyTotals(filteredDays);
-                
-                let yPos = 55;
-                doc.setFontSize(14);
-                doc.setTextColor(0, 0, 0);
-                doc.text(`RIEPILOGO ${currentMonth.toUpperCase()}`, margin, yPos);
-                
-                yPos += 10;
-                doc.setFontSize(10);
-                doc.setTextColor(50, 50, 50);
-                
-                const summaryData = [
-                    [`Ore Ordinarie Lavorate:`, formatHours(monthlyData.regularHours)],
-                    [`Ore Straordinari:`, formatHours(monthlyData.overtimeHours)],
-                    [`Ore Notturne:`, formatHours(monthlyData.nightHours)],
-                    [`Giorni Trasferta:`, monthlyData.travelDays.toString()],
-                    [`TOTALE COMPENSO:`, `€${monthlyData.monthlyTotal.toFixed(2)}`]
-                ];
-                
-                summaryData.forEach(([label, value], index) => {
-                    doc.text(label, margin, yPos + (index * 6));
-                    doc.setFont(undefined, 'bold');
-                    if (index === summaryData.length - 1) {
-                        doc.setTextColor(139, 0, 0);
-                        doc.setFontSize(12);
-                    }
-                    doc.text(value, margin + 60, yPos + (index * 6));
-                    doc.setFont(undefined, 'normal');
-                    doc.setTextColor(50, 50, 50);
-                    doc.setFontSize(10);
-                });
-                
-                yPos += 45;
-                
-                const tableData = filteredDays.map(day => [
-                    formatDate(day.date),
-                    day.entryTime,
-                    day.breakStart || '--',
-                    day.breakEnd || '--',
-                    day.exitTime,
-                    day.breakTime,
-                    formatHours(parseFloat(day.workHours)),
-                    formatHours(parseFloat(day.overtimeHours)),
-                    formatHours(parseFloat(day.nightHours || 0)),
-                    day.dayType?.substring(0, 15) || 'Feriale',
-                    day.travelType || '--',
-                    `€${day.dailyPay}`,
-                    (day.notes || '').substring(0, 20)
-                ]);
-                
-                const tableHeaders = [
-                    'Data', 'Entrata', 'Pausa', 'Rientro', 'Uscita', 
-                    'Pausa Tot.', 'Ore Lav.', 'Straord.', 'Notturne', 
-                    'Tipo Giorno', 'Trasferta', 'Compenso', 'Note'
-                ];
-                
-                doc.autoTable({
-                    head: [tableHeaders],
-                    body: tableData,
-                    startY: yPos,
-                    margin: { left: margin, right: margin },
-                    styles: {
-                        fontSize: 8,
-                        cellPadding: 2,
-                        halign: 'center'
-                    },
-                    headStyles: {
-                        fillColor: [139, 0, 0],
-                        textColor: [255, 255, 255],
-                        fontSize: 9,
-                        fontStyle: 'bold'
-                    },
-                    alternateRowStyles: {
-                        fillColor: [248, 249, 250]
-                    },
-                    columnStyles: {
-                        0: { cellWidth: 22 },
-                        1: { cellWidth: 18 },
-                        2: { cellWidth: 22 },
-                        3: { cellWidth: 20 },
-                        4: { cellWidth: 18 },
-                        5: { cellWidth: 22 },
-                        6: { cellWidth: 20 },
-                        7: { cellWidth: 18 },
-                        8: { cellWidth: 18 },
-                        9: { cellWidth: 32 },
-                        10: { cellWidth: 22 },
-                        11: { cellWidth: 22, fontStyle: 'bold' },
-                        12: { cellWidth: 30, fontSize: 8 }
-                    },
-                    didDrawPage: function(data) {
-                        doc.setFontSize(8);
-                        doc.setTextColor(150, 150, 150);
-                        doc.text(`Pagina ${data.pageNumber}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
-                        doc.text('Generato con Gestione Orari Lavorativi Pro v3.1 - Filtro Mensile', margin, pageHeight - 10);
-                    }
-                });
-                
-                const fileName = `registro_${currentMonth.toLowerCase().replace(' ', '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
-                doc.save(fileName);
-                
-                showMessage(`PDF per ${currentMonth} generato e scaricato con successo!`, 'success');
-                
-            } catch (error) {
-                console.error('Errore export PDF filtrato:', error);
-                showMessage('Errore nella generazione del PDF: ' + error.message, 'error');
-            }
+        function populateBreakdownDisplay(breakdown, hourlyRate) {
+            document.getElementById('weekdayBreakdown').textContent = 
+                `${formatHours(breakdown.weekdayOvertime)} × €${hourlyRate.toFixed(2)} × 1.25 = €${breakdown.amounts.weekday.toFixed(2)}`;
+            document.getElementById('weekdayAmount').textContent = `€${breakdown.amounts.weekday.toFixed(2)}`;
+            
+            document.getElementById('saturdayFirstBreakdown').textContent = 
+                `${formatHours(breakdown.saturdayFirst3)} × €${hourlyRate.toFixed(2)} × 1.25 = €${breakdown.amounts.saturdayFirst.toFixed(2)}`;
+            document.getElementById('saturdayFirstAmount').textContent = `€${breakdown.amounts.saturdayFirst.toFixed(2)}`;
+            
+            document.getElementById('saturdayRestBreakdown').textContent = 
+                `${formatHours(breakdown.saturdayRest)} × €${hourlyRate.toFixed(2)} × 1.50 = €${breakdown.amounts.saturdayRest.toFixed(2)}`;
+            document.getElementById('saturdayRestAmount').textContent = `€${breakdown.amounts.saturdayRest.toFixed(2)}`;
+            
+            document.getElementById('sundayBreakdown').textContent = 
+                `${formatHours(breakdown.sundayAll)} × €${hourlyRate.toFixed(2)} × 1.45 = €${breakdown.amounts.sunday.toFixed(2)}`;
+            document.getElementById('sundayAmount').textContent = `€${breakdown.amounts.sunday.toFixed(2)}`;
+            
+            const overtimeSubtotal = breakdown.amounts.weekday + breakdown.amounts.saturdayFirst + 
+                                   breakdown.amounts.saturdayRest + breakdown.amounts.sunday;
+            document.getElementById('overtimeSubtotal').textContent = `€${overtimeSubtotal.toFixed(2)}`;
+            
+            document.getElementById('nightNormalBreakdown').textContent = 
+                `${formatHours(breakdown.nightNormal)} × €${hourlyRate.toFixed(2)} × 0.15 = €${breakdown.amounts.nightNormal.toFixed(2)}`;
+            document.getElementById('nightNormalAmount').textContent = `€${breakdown.amounts.nightNormal.toFixed(2)}`;
+            
+            document.getElementById('nightOvertimeBreakdown').textContent = 
+                `${formatHours(breakdown.nightOvertime)} × €${hourlyRate.toFixed(2)} × 0.55 = €${breakdown.amounts.nightOvertime.toFixed(2)}`;
+            document.getElementById('nightOvertimeAmount').textContent = `€${breakdown.amounts.nightOvertime.toFixed(2)}`;
+            
+            document.getElementById('travelBreakdown').textContent = 
+                `${breakdown.travelDays} giorni × €${(breakdown.travelAmount / Math.max(breakdown.travelDays, 1)).toFixed(2)} = €${breakdown.travelAmount.toFixed(2)}`;
+            document.getElementById('travelAmount').textContent = `€${breakdown.amounts.travel.toFixed(2)}`;
+            
+            const bonusSubtotal = breakdown.amounts.nightNormal + breakdown.amounts.nightOvertime + breakdown.amounts.travel;
+            document.getElementById('bonusSubtotal').textContent = `€${bonusSubtotal.toFixed(2)}`;
+            
+            const totalBonuses = overtimeSubtotal + bonusSubtotal;
+            document.getElementById('totalBonuses').textContent = `€${totalBonuses.toFixed(2)}`;
+            document.getElementById('totalBonusesDisplay').textContent = `€${totalBonuses.toFixed(2)}`;
+            
+            const completeDays = workDays.filter(day => day.status === 'completo');
+            const monthlyTotal = completeDays.reduce((sum, day) => sum + parseFloat(day.dailyPay), 0);
+            
+            const calculatedBasePay = monthlyTotal - totalBonuses;
+            
+            document.getElementById('basePay').textContent = `€${calculatedBasePay.toFixed(2)}`;
+            document.getElementById('grandTotal').textContent = `€${monthlyTotal.toFixed(2)}`;
         }
         
         function calculateMonthlyTotals(filteredDays) {
@@ -2796,263 +2775,17 @@
                 monthlyTotal
             };
         }
-        
-        function updateOvertimeBreakdown(completeDays) {
-            console.log('📊 Calcolando breakdown dettagliato straordinari v3.0...');
-            
-            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
-            const breakdown = calculateOvertimeBreakdown(completeDays, hourlyRate);
-            
-            // Aggiorna tutti gli elementi HTML con i valori calcolati
-            populateBreakdownDisplay(breakdown, hourlyRate);
-            
-            console.log('✅ Breakdown straordinari aggiornato:', breakdown);
-        }
 
-        function calculateOvertimeBreakdown(completeDays, hourlyRate) {
-            let breakdown = {
-                // Straordinari per tipo giorno
-                weekdayOvertime: 0,      // Feriali oltre 8h
-                saturdayFirst3: 0,       // Sabato prime 3h
-                saturdayRest: 0,         // Sabato oltre 3h
-                sundayAll: 0,            // Domenica tutto
-                
-                // Ore notturne
-                nightNormal: 0,          // Notturne normali
-                nightOvertime: 0,        // Notturne straordinarie
-                
-                // Trasferte
-                travelDays: 0,
-                travelAmount: 0,
-                
-                // Importi calcolati - ORA USANDO LA STESSA LOGICA DI calculateContractualPay()
-                amounts: {
-                    weekday: 0,          
-                    saturdayFirst: 0,    
-                    saturdayRest: 0,     
-                    sunday: 0,           
-                    nightNormal: 0,      
-                    nightOvertime: 0,    
-                    travel: 0            
-                }
-            };
-            
-            completeDays.forEach(day => {
-                const workDate = new Date(day.date);
-                const dayOfWeek = workDate.getDay();
-                const workHours = parseFloat(day.workHours);
-                const nightHours = parseFloat(day.nightHours || 0);
-                const standardHours = parseFloat(document.getElementById('standardHours').value) || 8;
-                
-                // CORREZIONE: Usa ESATTAMENTE la stessa logica di calculateContractualPay()
-                
-                if (dayOfWeek === 0) {
-                    // DOMENICA: tutto maggiorato +45%
-                    breakdown.sundayAll += workHours;
-                    breakdown.amounts.sunday += workHours * hourlyRate * 1.45;
-                    
-                } else if (dayOfWeek === 6) {
-                    // SABATO: prime 3h +25%, resto +50%
-                    const first3Hours = Math.min(workHours, 3);
-                    const restHours = Math.max(0, workHours - 3);
-                    
-                    breakdown.saturdayFirst3 += first3Hours;
-                    breakdown.saturdayRest += restHours;
-                    
-                    breakdown.amounts.saturdayFirst += first3Hours * hourlyRate * 1.25;
-                    breakdown.amounts.saturdayRest += restHours * hourlyRate * 1.50;
-                    
-                    // Per sabato, aggiungi anche le maggiorazioni notturne se presenti
-                    if (nightHours > 0) {
-                        const nightNormalRate = Math.min(nightHours, 3) * hourlyRate * 0.15;
-                        const nightOvertimeRate = Math.max(0, nightHours - 3) * hourlyRate * 0.05;
-                        breakdown.amounts.saturdayFirst += nightNormalRate;
-                        breakdown.amounts.saturdayRest += nightOvertimeRate;
-                    }
-                    
-                } else {
-                    // FERIALI: USA ESATTAMENTE LA STESSA LOGICA DI calculateContractualPay()
-                    const regularHours = Math.min(workHours, standardHours);
-                    const overtimeHours = Math.max(0, workHours - standardHours);
-                    
-                    // Calcola ore notturne usando la stessa logica precisa dell'originale
-                    const preciseResult = calculatePreciseHoursForBreakdown(workDate, workHours, nightHours);
-                    
-                    breakdown.weekdayOvertime += overtimeHours;
-                    
-                    // CALCOLO IDENTICO a calculateContractualPay()
-                    const regularDayHours = regularHours - preciseResult.regularNightHours;
-                    const overtimeDayHours = overtimeHours - preciseResult.overtimeNightHours;
-                    
-                    // Solo gli straordinari feriali (non le ore normali)
-                    breakdown.amounts.weekday += overtimeDayHours * hourlyRate * 1.25;
-                    breakdown.amounts.weekday += preciseResult.overtimeNightHours * hourlyRate * 1.55;
-                    
-                    // Maggiorazioni notturne separate (solo bonus aggiuntivi oltre la paga base)
-                    breakdown.nightNormal += preciseResult.regularNightHours;
-                    breakdown.nightOvertime += preciseResult.overtimeNightHours;
-                    
-                    breakdown.amounts.nightNormal += preciseResult.regularNightHours * hourlyRate * 0.15;
-                    breakdown.amounts.nightOvertime += preciseResult.overtimeNightHours * hourlyRate * 0.55;
-                }
-                
-                // Trasferte (importo fisso)
-                if (day.travelType) {
-                    breakdown.travelDays++;
-                    const travelType = travelTypes.find(t => t.name === day.travelType);
-                    if (travelType) {
-                        breakdown.travelAmount += travelType.amount;
-                        breakdown.amounts.travel += travelType.amount;
-                    }
-                }
-            });
-            
-            return breakdown;
-        }
-        
-        // NUOVA FUNZIONE: Calcolo preciso identico per il breakdown
-        function calculatePreciseHoursForBreakdown(workDate, totalWorkHours, nightHours) {
-            const standardHours = parseFloat(document.getElementById('standardHours').value) || 8;
-            
-            // Approssimazione: dividi le ore notturne proporzionalmente
-            const regularHours = Math.min(totalWorkHours, standardHours);
-            const overtimeHours = Math.max(0, totalWorkHours - standardHours);
-            
-            let regularNightHours = 0;
-            let overtimeNightHours = 0;
-            
-            if (nightHours > 0) {
-                // Distribuisci le ore notturne proporzionalmente tra regolari e straordinarie
-                const regularRatio = regularHours / totalWorkHours;
-                const overtimeRatio = overtimeHours / totalWorkHours;
-                
-                regularNightHours = nightHours * regularRatio;
-                overtimeNightHours = nightHours * overtimeRatio;
-            }
-            
-            return {
-                regularNightHours,
-                overtimeNightHours
-            };
-        }
-
-        function populateBreakdownDisplay(breakdown, hourlyRate) {
-            // === STRAORDINARI PER TIPO GIORNO (TOTALI EFFETTIVI) ===
-            
-            // Feriali oltre 8h - TOTALE EFFETTIVO
-            document.getElementById('weekdayBreakdown').textContent = 
-                `${formatHours(breakdown.weekdayOvertime)} × €${hourlyRate.toFixed(2)} × 1.25 = €${breakdown.amounts.weekday.toFixed(2)}`;
-            document.getElementById('weekdayAmount').textContent = `€${breakdown.amounts.weekday.toFixed(2)}`;
-            
-            // Sabato prime 3h - TOTALE EFFETTIVO
-            document.getElementById('saturdayFirstBreakdown').textContent = 
-                `${formatHours(breakdown.saturdayFirst3)} × €${hourlyRate.toFixed(2)} × 1.25 = €${breakdown.amounts.saturdayFirst.toFixed(2)}`;
-            document.getElementById('saturdayFirstAmount').textContent = `€${breakdown.amounts.saturdayFirst.toFixed(2)}`;
-            
-            // Sabato oltre 3h - TOTALE EFFETTIVO
-            document.getElementById('saturdayRestBreakdown').textContent = 
-                `${formatHours(breakdown.saturdayRest)} × €${hourlyRate.toFixed(2)} × 1.50 = €${breakdown.amounts.saturdayRest.toFixed(2)}`;
-            document.getElementById('saturdayRestAmount').textContent = `€${breakdown.amounts.saturdayRest.toFixed(2)}`;
-            
-            // Domenica tutto - TOTALE EFFETTIVO
-            document.getElementById('sundayBreakdown').textContent = 
-                `${formatHours(breakdown.sundayAll)} × €${hourlyRate.toFixed(2)} × 1.45 = €${breakdown.amounts.sunday.toFixed(2)}`;
-            document.getElementById('sundayAmount').textContent = `€${breakdown.amounts.sunday.toFixed(2)}`;
-            
-            // Subtotale straordinari - SOMMA DEI TOTALI EFFETTIVI
-            const overtimeSubtotal = breakdown.amounts.weekday + breakdown.amounts.saturdayFirst + 
-                                   breakdown.amounts.saturdayRest + breakdown.amounts.sunday;
-            document.getElementById('overtimeSubtotal').textContent = `€${overtimeSubtotal.toFixed(2)}`;
-            
-            // === MAGGIORAZIONI SPECIALI (SOLO MAGGIORAZIONI) ===
-            
-            // Notturno normale - SOLO MAGGIORAZIONE
-            document.getElementById('nightNormalBreakdown').textContent = 
-                `${formatHours(breakdown.nightNormal)} × €${hourlyRate.toFixed(2)} × 0.15 = €${breakdown.amounts.nightNormal.toFixed(2)}`;
-            document.getElementById('nightNormalAmount').textContent = `€${breakdown.amounts.nightNormal.toFixed(2)}`;
-            
-            // Notturno straordinario - SOLO MAGGIORAZIONE
-            document.getElementById('nightOvertimeBreakdown').textContent = 
-                `${formatHours(breakdown.nightOvertime)} × €${hourlyRate.toFixed(2)} × 0.55 = €${breakdown.amounts.nightOvertime.toFixed(2)}`;
-            document.getElementById('nightOvertimeAmount').textContent = `€${breakdown.amounts.nightOvertime.toFixed(2)}`;
-            
-            // Trasferte - IMPORTO FISSO
-            document.getElementById('travelBreakdown').textContent = 
-                `${breakdown.travelDays} giorni × €${(breakdown.travelAmount / Math.max(breakdown.travelDays, 1)).toFixed(2)} = €${breakdown.travelAmount.toFixed(2)}`;
-            document.getElementById('travelAmount').textContent = `€${breakdown.amounts.travel.toFixed(2)}`;
-            
-            // Subtotale maggiorazioni (notturne + trasferte)
-            const bonusSubtotal = breakdown.amounts.nightNormal + breakdown.amounts.nightOvertime + breakdown.amounts.travel;
-            document.getElementById('bonusSubtotal').textContent = `€${bonusSubtotal.toFixed(2)}`;
-            
-            // TOTALE GENERALE (straordinari + maggiorazioni)
-            const totalBonuses = overtimeSubtotal + bonusSubtotal;
-            document.getElementById('totalBonuses').textContent = `€${totalBonuses.toFixed(2)}`;
-            document.getElementById('totalBonusesDisplay').textContent = `€${totalBonuses.toFixed(2)}`;
-            
-            // === CALCOLO FINALE CORRETTO - USA I VALORI ESISTENTI ===
-            
-            // CORREZIONE: Usa i dailyPay già calcolati (che sappiamo essere corretti)
-            const completeDays = workDays.filter(day => day.status === 'completo');
-            const monthlyTotal = completeDays.reduce((sum, day) => sum + parseFloat(day.dailyPay), 0);
-            
-            // CALCOLA PAGA BASE SOTTRAENDO LE MAGGIORAZIONI DAI TOTALI ESISTENTI
-            let basePay = 0;
-            
-            completeDays.forEach(day => {
-                const workDate = new Date(day.date);
-                const dayOfWeek = workDate.getDay();
-                const workHours = parseFloat(day.workHours);
-                const dailyPayValue = parseFloat(day.dailyPay);
-                
-                if (dayOfWeek === 0) {
-                    // Domenica: paga base = totale / 1.45
-                    basePay += (dailyPayValue - (day.travelType ? travelTypes.find(t => t.name === day.travelType)?.amount || 0 : 0)) / 1.45 * hourlyRate;
-                } else if (dayOfWeek === 6) {
-                    // Sabato: più complesso, ma approssima
-                    basePay += workHours * hourlyRate;
-                } else {
-                    // Feriali: sottrai solo gli straordinari e le maggiorazioni notturne
-                    const standardHours = parseFloat(document.getElementById('standardHours').value) || 8;
-                    const regularHours = Math.min(workHours, standardHours);
-                    basePay += regularHours * hourlyRate;
-                }
-            });
-            
-            // ALTERNATIVA PIÙ SEMPLICE E SICURA: Calcola come differenza
-            const calculatedBasePay = monthlyTotal - totalBonuses;
-            
-            document.getElementById('basePay').textContent = `€${calculatedBasePay.toFixed(2)}`;
-            document.getElementById('grandTotal').textContent = `€${monthlyTotal.toFixed(2)}`;
-            
-            // Verifica perfetta corrispondenza
-            console.log('🧮 Verifica calcolo v3.1 CORRETTA con Filtro Mensile:', {
-                'Monthly Total (sistema)': monthlyTotal.toFixed(2),
-                'Base Pay (calcolata)': calculatedBasePay.toFixed(2),
-                'Total Bonuses (breakdown)': totalBonuses.toFixed(2),
-                'Somma (base + bonus)': (calculatedBasePay + totalBonuses).toFixed(2),
-                'Differenza': Math.abs(monthlyTotal - (calculatedBasePay + totalBonuses)).toFixed(4),
-                'MATCH': Math.abs(monthlyTotal - (calculatedBasePay + totalBonuses)) < 0.01 ? '✅ PERFETTO' : '❌ ERRORE'
-            });
-        }
-
-        // === NUOVE FUNZIONI IMPORT EXCEL CORRETTE ===
-        
-        // IMPORT EXCEL MIGLIORATO - VERSIONE CORRETTA
         function importFromExcelFixed() {
-            console.log('🚀 Avviando import Excel con funzioni corrette...');
-            
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = '.xlsx,.xls';
             input.onchange = function(e) {
                 const file = e.target.files[0];
                 if (file) {
-                    console.log('📁 File selezionato:', file.name);
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         try {
-                            console.log('=== STARTING EXCEL IMPORT FIXED ===');
                             const data = new Uint8Array(e.target.result);
                             const workbook = XLSX.read(data, { type: 'array' });
                             
@@ -3060,14 +2793,11 @@
                             const worksheet = workbook.Sheets[firstSheetName];
                             
                             const jsonData = XLSX.utils.sheet_to_json(worksheet);
-                            console.log('✅ Excel data loaded:', jsonData.length, 'rows');
-                            console.log('📋 Sample data:', jsonData[0]);
                             
-                            // USA LA NUOVA FUNZIONE processImportedDataFixed
                             processImportedDataFixed(jsonData);
                             
                         } catch (error) {
-                            console.error('❌ Errore nella lettura del file Excel:', error);
+                            console.error('Errore nella lettura del file Excel:', error);
                             showMessage('Errore nella lettura del file Excel: ' + error.message, 'error');
                         }
                     };
@@ -3077,7 +2807,6 @@
             input.click();
         }
 
-        // FUNZIONE PROCESSAMENTO DATI CORRETTA
         function processImportedDataFixed(data) {
             if (!data || data.length === 0) {
                 showMessage('File Excel vuoto o formato non riconosciuto', 'error');
@@ -3087,20 +2816,12 @@
             let importedCount = 0;
             let errorCount = 0;
             let skippedCount = 0;
-            const errors = [];
-
-            console.log('🔄 Processando', data.length, 'record...');
 
             data.forEach((row, index) => {
                 try {
-                    console.log(`\n=== PROCESSING ROW ${index + 1} ===`);
-                    console.log('Row data:', row);
-                    
-                    // USA LA NUOVA FUNZIONE mapYourExcelFormat
                     const mappedRow = mapYourExcelFormat(row, index);
                     
                     if (mappedRow && mappedRow.date && mappedRow.entryTime && mappedRow.exitTime) {
-                        // Controlla se la data esiste già
                         const existingIndex = workDays.findIndex(day => day.date === mappedRow.date);
                         if (existingIndex !== -1) {
                             workDays.splice(existingIndex, 1);
@@ -3108,9 +2829,7 @@
                         
                         workDays.push(mappedRow);
                         importedCount++;
-                        console.log('✅ Imported successfully:', mappedRow.date);
                     } else if (mappedRow && mappedRow.date && mappedRow.entryTime && !mappedRow.exitTime) {
-                        // Giornata incompleta - importa comunque
                         const existingIndex = workDays.findIndex(day => day.date === mappedRow.date);
                         if (existingIndex !== -1) {
                             workDays.splice(existingIndex, 1);
@@ -3118,103 +2837,69 @@
                         
                         workDays.push(mappedRow);
                         importedCount++;
-                        console.log('⚠️ Imported incomplete day:', mappedRow.date);
                     } else {
                         skippedCount++;
-                        errors.push(`Riga ${index + 2}: dati mancanti o non validi`);
-                        console.log('❌ Skipped row:', index + 1);
                     }
                 } catch (error) {
                     errorCount++;
-                    errors.push(`Riga ${index + 2}: ${error.message}`);
-                    console.error('Error processing row:', error);
                 }
             });
 
-            // Ordina per data
             workDays.sort((a, b) => new Date(a.date) - new Date(b.date));
             
-            // Aggiorna visualizzazione e salva
             updateTable();
-            populateMonthSelector(); // NOVITÀ v3.1: Aggiorna selettore mese
+            populateMonthSelector();
             updateSummary();
             generateCalendar();
             autoSaveWorkDays();
             
-            // Callback post-import per analisi
-            if (window.postImportCallback) {
-                setTimeout(window.postImportCallback, 500);
-            }
-            
-            // Mostra risultato dettagliato
             let message = `✅ Import completato: ${importedCount} righe importate`;
             if (skippedCount > 0) {
                 message += `, ${skippedCount} saltate`;
             }
             if (errorCount > 0) {
                 message += `, ${errorCount} errori`;
-                console.log('Errori import:', errors);
             }
             showMessage(message, importedCount > 0 ? 'success' : 'error');
-            
-            console.log('🎯 Import v3.1 completato - Filtro per mese aggiornato con breakdown dettagliato calcolati correttamente!');
         }
 
-        // NUOVA FUNZIONE specifica per il TUO formato Excel
         function mapYourExcelFormat(row, rowIndex) {
-            console.log('🔍 Mapping row with your Excel format...');
-            
-            // I nomi dei campi ESATTI dal tuo Excel
             const data = row['Data'];
             const entrata = row['Entrata'];
-            const pausa = row['Pausa'];  // Inizio pausa
-            const rientro = row['Rientro']; // Fine pausa  
+            const pausa = row['Pausa'];
+            const rientro = row['Rientro'];
             const uscita = row['Uscita'];
             const note = row['Note'] || '';
 
-            console.log('📋 Raw fields:', { data, entrata, pausa, rientro, uscita });
-
             if (!data) {
-                console.log('❌ No date found');
                 return null;
             }
 
-            // Converte data da DD/MM/YYYY a YYYY-MM-DD
             let date;
             if (typeof data === 'string' && data.includes('/')) {
                 const dateParts = data.split('/');
                 if (dateParts.length === 3) {
-                    // DD/MM/YYYY → YYYY-MM-DD
                     const day = dateParts[0].padStart(2, '0');
                     const month = dateParts[1].padStart(2, '0');
                     const year = dateParts[2];
                     date = `${year}-${month}-${day}`;
-                    console.log('📅 Date converted:', data, '→', date);
                 }
             }
 
             if (!date) {
-                console.log('❌ Invalid date format:', data);
                 return null;
             }
 
-            // Pulisci gli orari (sono già in formato HH:MM)
             const entryTime = cleanTimeString(entrata);
             const exitTime = cleanTimeString(uscita);
             const breakStart = cleanTimeString(pausa);
             const breakEnd = cleanTimeString(rientro);
 
-            console.log('🕐 Cleaned times:', { entryTime, exitTime, breakStart, breakEnd });
-
-            // Se non c'è entrata, salta
             if (!entryTime) {
-                console.log('❌ No entry time found');
                 return null;
             }
 
-            // Calcola SOLO se abbiamo entrata E uscita
             if (entryTime && exitTime) {
-                // Salva configurazione attuale
                 const currentConfig = {
                     date: document.getElementById('workDate').value,
                     breakStart: document.getElementById('breakStart').value,
@@ -3223,18 +2908,13 @@
                 };
 
                 try {
-                    // Imposta valori temporanei per calcolo
                     document.getElementById('workDate').value = date;
                     document.getElementById('breakStart').value = breakStart || '';
                     document.getElementById('breakEnd').value = breakEnd || '';
                     additionalBreaks = [];
 
-                    // Calcola
                     const result = calculateWorkHours(entryTime, exitTime);
-                    
-                    console.log('💰 Calculation result:', result);
 
-                    // Ripristina configurazione
                     document.getElementById('workDate').value = currentConfig.date;
                     document.getElementById('breakStart').value = currentConfig.breakStart;
                     document.getElementById('breakEnd').value = currentConfig.breakEnd;
@@ -3259,9 +2939,6 @@
                     };
 
                 } catch (error) {
-                    console.error('❌ Calcolo fallito:', error);
-                    
-                    // Ripristina comunque la configurazione
                     document.getElementById('workDate').value = currentConfig.date;
                     document.getElementById('breakStart').value = currentConfig.breakStart;
                     document.getElementById('breakEnd').value = currentConfig.breakEnd;
@@ -3270,8 +2947,6 @@
                     return null;
                 }
             } else {
-                // Giornata incompleta
-                console.log('⚠️ Incomplete day:', date);
                 return {
                     date,
                     entryTime: entryTime || '',
@@ -3292,7 +2967,6 @@
             }
         }
 
-        // Funzione utility per pulire le stringhe orario
         function cleanTimeString(timeStr) {
             if (!timeStr || typeof timeStr !== 'string') {
                 return '';
@@ -3300,12 +2974,10 @@
             
             const cleaned = timeStr.trim();
             
-            // Se è già in formato HH:MM, ritorna così com'è
             if (cleaned.match(/^\d{1,2}:\d{2}$/)) {
                 return cleaned;
             }
             
-            // Se è vuoto o contiene solo "-", ritorna vuoto
             if (cleaned === '' || cleaned === '-' || cleaned === '--') {
                 return '';
             }
@@ -3313,209 +2985,6 @@
             return cleaned;
         }
 
-        // === FUNZIONI DI TEST E DEBUG ===
-        
-        // FUNZIONE per verificare la configurazione prima dell'import
-        function checkConfigBeforeImport() {
-            console.log('=== CONFIGURAZIONE ATTUALE ===');
-            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value);
-            const standardHours = parseFloat(document.getElementById('standardHours').value);
-            const standardBreak = parseFloat(document.getElementById('standardBreak').value);
-            
-            console.log('💰 Paga oraria:', hourlyRate);
-            console.log('⏱️ Ore standard:', standardHours);
-            console.log('☕ Pausa standard:', standardBreak, 'min');
-            console.log('✈️ Tipi trasferta:', travelTypes);
-            
-            // Verifica se la configurazione è realistica
-            if (hourlyRate < 5 || hourlyRate > 100) {
-                console.warn('⚠️ Paga oraria sembra anomala:', hourlyRate);
-            }
-            
-            if (standardHours !== 8) {
-                console.warn('⚠️ Ore standard diverse da 8:', standardHours);
-            }
-            
-            const isValid = hourlyRate > 0 && standardHours > 0;
-            
-            showMessage(`Configurazione ${isValid ? 'valida' : 'NON valida'} - Paga: €${hourlyRate}/h, Ore: ${standardHours}h`, 
-                       isValid ? 'success' : 'error');
-            
-            return {
-                hourlyRate: hourlyRate,
-                standardHours: standardHours,
-                isValid: isValid
-            };
-        }
-
-        // FUNZIONE per testare il calcolo degli straordinari
-        function testOvertimeCalculation() {
-            console.log('=== 🧪 TEST CALCOLO STRAORDINARI ===');
-            
-            // Salva configurazione attuale
-            const originalConfig = {
-                hourlyRate: document.getElementById('hourlyRate').value,
-                standardHours: document.getElementById('standardHours').value,
-                standardBreak: document.getElementById('standardBreak').value
-            };
-            
-            // Imposta configurazione test
-            document.getElementById('hourlyRate').value = '15';
-            document.getElementById('standardHours').value = '8';
-            document.getElementById('standardBreak').value = '60';
-            
-            // Test cases
-            const testCases = [
-                {
-                    name: 'Giorno normale 8h',
-                    date: '2024-03-15', // Venerdì
-                    entry: '09:00',
-                    exit: '18:00',
-                    breakStart: '13:00',
-                    breakEnd: '14:00',
-                    expectedWork: 8,
-                    expectedOvertime: 0
-                },
-                {
-                    name: 'Giorno con straordinari 10h',
-                    date: '2024-03-15', // Venerdì
-                    entry: '08:00',
-                    exit: '19:00',
-                    breakStart: '13:00',
-                    breakEnd: '14:00',
-                    expectedWork: 10,
-                    expectedOvertime: 2
-                },
-                {
-                    name: 'Sabato 6h',
-                    date: '2024-03-16', // Sabato
-                    entry: '09:00',
-                    exit: '16:00',
-                    breakStart: '12:00',
-                    breakEnd: '13:00',
-                    expectedWork: 6,
-                    expectedOvertime: 6 // Tutto straordinario nei weekend
-                }
-            ];
-            
-            testCases.forEach(testCase => {
-                console.log(`\n--- 🧪 Test: ${testCase.name} ---`);
-                
-                // Imposta valori test
-                document.getElementById('workDate').value = testCase.date;
-                document.getElementById('breakStart').value = testCase.breakStart;
-                document.getElementById('breakEnd').value = testCase.breakEnd;
-                additionalBreaks = [];
-                
-                // Calcola
-                const result = calculateWorkHours(testCase.entry, testCase.exit);
-                
-                // Verifica risultati
-                const actualWork = parseFloat(result.workHours);
-                const actualOvertime = parseFloat(result.overtimeHours);
-                
-                console.log(`📊 Ore lavorate: ${actualWork} (atteso: ${testCase.expectedWork})`);
-                console.log(`⚡ Straordinari: ${actualOvertime} (atteso: ${testCase.expectedOvertime})`);
-                console.log(`🏷️ Tipo giorno: ${result.dayType}`);
-                console.log(`💰 Compenso: €${result.dailyPay}`);
-                
-                // Controlli
-                if (Math.abs(actualWork - testCase.expectedWork) > 0.01) {
-                    console.error(`❌ ERRORE: Ore lavorate sbagliate!`);
-                } else {
-                    console.log(`✅ Ore lavorate corrette`);
-                }
-                
-                if (Math.abs(actualOvertime - testCase.expectedOvertime) > 0.01) {
-                    console.error(`❌ ERRORE: Straordinari sbagliati!`);
-                } else {
-                    console.log(`✅ Straordinari corretti`);
-                }
-            });
-            
-            // Ripristina configurazione originale
-            document.getElementById('hourlyRate').value = originalConfig.hourlyRate;
-            document.getElementById('standardHours').value = originalConfig.standardHours;
-            document.getElementById('standardBreak').value = originalConfig.standardBreak;
-            
-            console.log('\n=== 🏁 FINE TEST v3.1 ===');
-            showMessage('Test calcolo straordinari v3.1 completato - controlla la console (F12) e il breakdown dettagliato per mese', 'success');
-        }
-
-        // FUNZIONE per confrontare i risultati prima/dopo
-        function compareImportResults() {
-            const beforeImport = [...workDays]; // Copia dei dati attuali
-            
-            return function(afterImport) {
-                console.log('=== 📊 CONFRONTO RISULTATI IMPORT ===');
-                console.log('Prima:', beforeImport.length, 'record');
-                console.log('Dopo:', afterImport.length, 'record');
-                
-                const beforeTotal = beforeImport.reduce((sum, day) => sum + parseFloat(day.overtimeHours || 0), 0);
-                const afterTotal = afterImport.reduce((sum, day) => sum + parseFloat(day.overtimeHours || 0), 0);
-                
-                console.log('⚡ Straordinari prima:', beforeTotal.toFixed(2), 'ore');
-                console.log('⚡ Straordinari dopo:', afterTotal.toFixed(2), 'ore');
-                console.log('📈 Differenza:', (afterTotal - beforeTotal).toFixed(2), 'ore');
-                
-                // Mostra record cambiati
-                afterImport.forEach(newDay => {
-                    const oldDay = beforeImport.find(d => d.date === newDay.date);
-                    if (!oldDay) {
-                        console.log('✅ Nuovo record:', newDay.date, '- Straordinari:', newDay.overtimeHours);
-                    } else if (oldDay.overtimeHours !== newDay.overtimeHours) {
-                        console.log('🔄 Modificato:', newDay.date, 
-                                   '- Prima:', oldDay.overtimeHours, 
-                                   '- Dopo:', newDay.overtimeHours);
-                    }
-                });
-            };
-        }
-
-        // PROCEDURA COMPLETA di import sicuro
-        function safeExcelImport() {
-            console.log('=== 🛡️ IMPORT SICURO EXCEL v3.1 ===');
-            
-            // 1. Controlla configurazione
-            const config = checkConfigBeforeImport();
-            if (!config.isValid) {
-                alert('⚠️ Controlla la configurazione prima di importare (paga oraria e ore standard)');
-                return;
-            }
-            
-            // 2. Backup dei dati attuali
-            const backup = [...workDays];
-            const compareFunction = compareImportResults();
-            
-            // 3. Procedi con import
-            console.log('✅ Configurazione OK, procedendo con import...');
-            showMessage('Import sicuro avviato - backup creato automaticamente', 'success');
-            
-            // Usa la versione corretta dell'import
-            importFromExcelFixed();
-            
-            // 4. Dopo l'import (questa funzione sarà chiamata da processImportedDataFixed)
-            window.postImportCallback = function() {
-                compareFunction(workDays);
-                
-                // Opzione per ripristinare
-                window.rollbackImport = function() {
-                    workDays.length = 0;
-                    workDays.push(...backup);
-                    updateTable();
-                    populateMonthSelector(); // NOVITÀ v3.1: Aggiorna selettore mese
-                    updateSummary();
-                    generateCalendar();
-                    autoSaveWorkDays();
-                    showMessage('✅ Import annullato - dati ripristinati dal backup', 'success');
-                };
-                
-                console.log('💡 Per annullare l\'import: rollbackImport()');
-                showMessage('Import v3.1 completato! Per annullare usa rollbackImport() nella console', 'success');
-            };
-        }
-
-        // === UTILITY ===
         function formatDate(dateString) {
             const date = new Date(dateString);
             return date.toLocaleDateString('it-IT');
@@ -3549,7 +3018,6 @@
             }, 5000);
         }
 
-        // === SISTEMA DI PERSISTENZA COMPLETO ===
         function saveConfig() {
             const config = {
                 hourlyRate: document.getElementById('hourlyRate').value,
@@ -3560,9 +3028,9 @@
             
             try {
                 localStorage.setItem('timesheetConfig', JSON.stringify(config));
-                showMessage('✅ Configurazione salvata manualmente', 'success');
+                showMessage('✅ Configurazione salvata', 'success');
             } catch (e) {
-                showMessage('❌ Salvataggio non disponibile in questo ambiente (funziona in locale)', 'error');
+                showMessage('❌ Salvataggio non disponibile', 'error');
             }
         }
 
@@ -3583,7 +3051,7 @@
                     return true;
                 }
             } catch (e) {
-                console.log('Errore nel caricamento configurazione:', e);
+                console.log('Errore caricamento configurazione:', e);
             }
             return false;
         }
@@ -3600,7 +3068,6 @@
                 try {
                     localStorage.setItem('timesheetConfig', JSON.stringify(config));
                 } catch (e) {
-                    // Silenzioso in caso di errore
                 }
             }, 500);
         }
@@ -3613,7 +3080,7 @@
                     return workDays.length;
                 }
             } catch (e) {
-                console.log('Errore nel caricamento dati registro:', e);
+                console.log('Errore caricamento dati:', e);
             }
             return 0;
         }
@@ -3623,7 +3090,6 @@
                 try {
                     localStorage.setItem('timesheetWorkDays', JSON.stringify(workDays));
                 } catch (e) {
-                    // Silenzioso in caso di errore
                 }
             }, 100);
         }
