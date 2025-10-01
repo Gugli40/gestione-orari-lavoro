@@ -1087,8 +1087,8 @@
                 </div>
                 <div style="display: grid; gap: 12px;">
                     <button class="btn btn-success" onclick="importFromExcelFixed()">📁 Importa Excel</button>
-                    <button class="btn btn-primary" onclick="exportToExcelFiltered()">📄 Esporta Excel</button>
-                    <button class="btn btn-primary" onclick="exportToPDFFiltered()">📑 Esporta PDF</button>
+                    <button class="btn btn-primary" onclick="handleExportExcel()">📄 Esporta Excel</button>
+                    <button class="btn btn-primary" onclick="handleExportPDF()">📑 Esporta PDF</button>
                     <button class="btn btn-danger" onclick="clearAllData()">🗑️ Cancella Tutto</button>
                 </div>
             </div>
@@ -2456,6 +2456,36 @@
                 travelDays,
                 monthlyTotal
             };
+        }
+
+        function handleExportExcel() {
+            try {
+                // Verifica che la libreria XLSX sia caricata
+                if (typeof XLSX === 'undefined') {
+                    showMessage('Libreria Excel non caricata. Ricarica la pagina.', 'error');
+                    return;
+                }
+                
+                exportToExcelFiltered();
+            } catch (error) {
+                console.error('Errore export Excel:', error);
+                showMessage('Errore durante l\'export Excel', 'error');
+            }
+        }
+
+        function handleExportPDF() {
+            try {
+                // Verifica che la libreria jsPDF sia caricata
+                if (typeof window.jspdf === 'undefined') {
+                    showMessage('Libreria PDF non caricata. Ricarica la pagina.', 'error');
+                    return;
+                }
+                
+                exportToPDFFiltered();
+            } catch (error) {
+                console.error('Errore export PDF:', error);
+                showMessage('Errore durante l\'export PDF: ' + error.message, 'error');
+            }
         }
 
         function exportToExcelFiltered() {
