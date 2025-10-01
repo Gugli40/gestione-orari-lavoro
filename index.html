@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#8B0000">
-    <meta name="description" content="Gestione professionale orari lavorativi con calcolo automatico straordinari e maggiorazioni">
+    <meta name="description" content="Gestione professionale orari lavorativi mobile-first">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Gestione Orari Lavorativi Pro</title>
+    <title>Orari Lavoro Pro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
@@ -16,1117 +16,1114 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+            -webkit-tap-highlight-color: transparent;
         }
 
-        button, a, input, select {
-            touch-action: manipulation;
+        :root {
+            --primary: #8B0000;
+            --primary-light: #DC143C;
+            --secondary: #198754;
+            --bg-main: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border: #e9ecef;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #212529;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            padding-bottom: 70px;
+            line-height: 1.5;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(139, 0, 0, 0.1);
-            overflow: hidden;
-            border: 1px solid #e9ecef;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
+        /* TOP HEADER - Mobile First */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
-            padding: 30px;
-            text-align: center;
+            padding: 12px 16px;
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
         }
 
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+        .top-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
-        .content {
-            padding: 30px;
+        .top-header p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 2px;
         }
 
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid #e9ecef;
-            margin-bottom: 30px;
-            background: #f8f9fa;
+        /* MAIN CONTENT AREA */
+        .content-wrapper {
+            margin-top: 80px;
+            padding: 0 0 20px 0;
+            min-height: calc(100vh - 150px);
         }
 
-        .tab {
-            padding: 15px 25px;
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-size: 16px;
-            font-weight: 500;
-            color: #6c757d;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .tab:hover {
-            background: #e9ecef;
-            color: #8B0000;
-        }
-
-        .tab.active {
-            color: #8B0000;
-            border-bottom-color: #8B0000;
-            background: white;
-            font-weight: 600;
-        }
-
+        /* TAB CONTENT */
         .tab-content {
             display: none;
+            animation: fadeIn 0.3s ease;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        .section {
-            margin-bottom: 30px;
-            padding: 25px;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            background: #ffffff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            overflow-x: auto;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .section h2 {
-            color: #212529;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            border-bottom: 2px solid #8B0000;
-            padding-bottom: 10px;
-            font-weight: 600;
+        /* CARD SYSTEM */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 12px 16px;
+            box-shadow: var(--shadow);
         }
 
-        .grid {
-            display: grid;
-            gap: 20px;
-        }
-
-        .grid-2 {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .grid-3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .form-group {
+        .card-header {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
             gap: 8px;
         }
 
-        .form-group label {
+        .card-badge {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 600;
-            color: #495057;
+        }
+
+        /* FORM INPUTS - Mobile Optimized */
+        .form-row {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
             font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
         }
 
-        .form-group input, .form-group select {
-            padding: 12px;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
+        .form-input, .form-select {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
             font-size: 16px;
-            transition: all 0.3s ease;
-            background: #ffffff;
+            background: var(--bg-card);
+            transition: all 0.2s;
         }
 
-        .form-group input:focus, .form-group select:focus {
+        .form-input:focus, .form-select:focus {
             outline: none;
-            border-color: #8B0000;
-            box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.1);
         }
 
+        /* TIME INPUTS - Big and Touch Friendly */
         .time-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            padding: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .time-card {
             background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
-        }
-
-        .time-input {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
             text-align: center;
-            border: 1px solid #e9ecef;
         }
 
-        .time-input label {
-            display: block;
-            font-weight: 600;
-            color: #8B0000;
-            margin-bottom: 8px;
+        .time-card.active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+        }
+
+        .time-label {
             font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
         }
 
-        .time-input input {
+        .time-card input[type="time"] {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
-            font-size: 18px;
-            font-weight: 600;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: 700;
             text-align: center;
-            color: #212529;
+            background: white;
         }
 
+        /* BUTTONS - Large and Touch Friendly */
         .btn {
-            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
-            color: white;
+            width: 100%;
+            padding: 18px;
             border: none;
-            padding: 12px 25px;
-            border-radius: 6px;
-            cursor: pointer;
+            border-radius: 12px;
             font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-flex;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            box-shadow: var(--shadow);
         }
 
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
-            background: linear-gradient(135deg, #A0000A 0%, #E6164D 100%);
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
         }
 
-        .btn-small {
-            padding: 8px 15px;
-            font-size: 14px;
+        .btn-primary:active {
+            transform: scale(0.98);
+            box-shadow: none;
         }
 
         .btn-success {
             background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+            color: white;
         }
 
-        .btn-success:hover {
-            background: linear-gradient(135deg, #157347 0%, #1aa179 100%);
-            box-shadow: 0 5px 15px rgba(25, 135, 84, 0.3);
+        .btn-secondary {
+            background: #f8f9fa;
+            color: var(--text-primary);
+            border: 2px solid var(--border);
         }
 
         .btn-danger {
             background: linear-gradient(135deg, #dc3545 0%, #fd7e83 100%);
+            color: white;
         }
 
-        .btn-danger:hover {
-            background: linear-gradient(135deg, #b02a37 0%, #fc616a 100%);
-            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        .btn-small {
+            padding: 12px 16px;
+            font-size: 14px;
+            width: auto;
         }
 
-        .btn-info {
-            background: linear-gradient(135deg, #0dcaf0 0%, #6edff6 100%);
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
         }
 
-        .btn-info:hover {
-            background: linear-gradient(135deg, #0aa2c0 0%, #5bc3d4 100%);
-            box-shadow: 0 5px 15px rgba(13, 202, 240, 0.3);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #fd7e14 0%, #ffc107 100%);
-            color: #000;
-        }
-
-        .btn-warning:hover {
-            background: linear-gradient(135deg, #e55e00 0%, #ffb30d 100%);
-            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
-        }
-
-        .config-item {
+        /* FLOATING ACTION BUTTON */
+        .fab {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            font-size: 32px;
+            box-shadow: 0 8px 24px rgba(139, 0, 0, 0.4);
+            cursor: pointer;
+            z-index: 90;
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 10px;
+            justify-content: center;
+            transition: all 0.3s;
         }
 
-        .config-item input {
+        .fab:active {
+            transform: scale(0.9);
+        }
+
+        .fab.hidden {
+            display: none;
+        }
+
+        /* BOTTOM NAVIGATION */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 100;
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+        }
+
+        .nav-item {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+            transition: all 0.2s;
         }
 
-        .timesheet-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-            border: 1px solid #e9ecef;
+        .nav-item.active {
+            color: var(--primary);
         }
 
-        .timesheet-table th, .timesheet-table td {
-            padding: 12px 8px;
-            text-align: center;
-            border-bottom: 1px solid #e9ecef;
-            font-size: 14px;
+        .nav-icon {
+            font-size: 24px;
         }
 
-        .timesheet-table th {
-            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
-            color: white;
+        .nav-label {
+            font-size: 11px;
             font-weight: 600;
-            position: sticky;
-            top: 0;
         }
 
-        .timesheet-table tr:hover {
-            background: #f8f9fa;
-        }
-
-        .summary {
+        /* SUMMARY CARDS */
+        .summary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px;
         }
 
         .summary-card {
-            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
-            padding: 25px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.15);
-            border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
         }
 
-        .summary-card h3 {
-            margin-bottom: 15px;
-            font-size: 1.1em;
-            opacity: 0.95;
-            font-weight: 500;
+        .summary-card.full {
+            grid-column: 1 / -1;
         }
 
-        .summary-card .value {
-            font-size: 2.2em;
-            font-weight: 700;
-        }
-
-        .error {
-            color: #f44336;
-            font-size: 14px;
-            margin-top: 5px;
-            padding: 10px;
-            background: #ffebee;
-            border-radius: 5px;
-            border-left: 4px solid #f44336;
-        }
-
-        .success {
-            color: #4CAF50;
-            font-size: 14px;
-            margin-top: 5px;
-            padding: 10px;
-            background: #e8f5e8;
-            border-radius: 5px;
-            border-left: 4px solid #4CAF50;
-        }
-
-        .auto-calc {
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            border-left: 4px solid #8B0000;
-            border: 1px solid #e9ecef;
-        }
-
-        .auto-calc h4 {
-            color: #8B0000;
-            margin-bottom: 10px;
+        .summary-label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 8px;
             font-weight: 600;
         }
 
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
+        .summary-value {
+            font-size: 28px;
+            font-weight: 700;
         }
 
-        .calc-item {
-            text-align: center;
-            padding: 10px;
-            background: white;
-            border-radius: 6px;
-            border: 1px solid #e9ecef;
+        /* CALENDAR - Mobile Optimized */
+        .calendar-header-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            margin: 0 16px;
+            border-radius: 16px;
+            margin-bottom: 12px;
         }
 
-        .calc-item .label {
-            font-size: 12px;
-            color: #6c757d;
-            text-transform: uppercase;
-            font-weight: 500;
-        }
-
-        .calc-item .value {
+        .calendar-title {
             font-size: 18px;
             font-weight: 700;
-            color: #8B0000;
         }
 
-        .calendar-container {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            overflow: hidden;
-            border: 1px solid #e9ecef;
-        }
-
-        .calendar-header {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
-        }
-
-        .calendar-day-header {
-            padding: 15px 5px;
-            text-align: center;
-            font-weight: 600;
+        .calendar-nav-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
             color: white;
-            font-size: 14px;
-        }
-
-        .calendar-day-header.sab {
-            background: rgba(255, 152, 0, 0.2);
-        }
-
-        .calendar-day-header.dom {
-            background: rgba(220, 53, 69, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 1px;
-            background: #e9ecef;
+            gap: 4px;
+            padding: 0 16px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            padding: 12px 4px;
         }
 
         .calendar-day {
-            background: white;
-            min-height: 80px;
-            padding: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
+            aspect-ratio: 1;
+            background: var(--bg-card);
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            border: 1px solid transparent;
-        }
-
-        .calendar-day:hover {
-            background: #f8f9fa;
-            transform: scale(1.02);
-            border-color: #8B0000;
-        }
-
-        .calendar-day.other-month {
-            background: #f8f9fa;
-            color: #adb5bd;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            border: 2px solid transparent;
+            transition: all 0.2s;
         }
 
         .calendar-day.today {
+            border-color: var(--primary);
             background: #fff5f5;
-            border: 2px solid #8B0000;
-            box-shadow: 0 0 10px rgba(139, 0, 0, 0.2);
-        }
-
-        .calendar-day.weekend {
-            background: #fff8f0;
         }
 
         .calendar-day.has-work {
-            background: #f8fff8;
-            border-left: 4px solid #198754;
+            background: #f0fdf4;
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.3;
         }
 
         .calendar-day.selected {
-            background: #fff5f5;
-            border: 2px solid #DC143C;
-            box-shadow: 0 0 15px rgba(220, 20, 60, 0.3);
+            background: var(--primary);
+            color: white;
         }
 
         .calendar-day-number {
-            font-weight: 700;
             font-size: 16px;
-            margin-bottom: 5px;
-            color: #212529;
+            font-weight: 700;
         }
 
-        .calendar-day-info {
-            font-size: 11px;
-            color: #6c757d;
-            line-height: 1.2;
-        }
-
-        .calendar-day-hours {
-            font-weight: 600;
-            color: #198754;
-        }
-
-        .calendar-day-pay {
-            color: #8B0000;
-            font-weight: 600;
-        }
-
-        .calendar-quick-add {
-            position: absolute;
-            top: 2px;
-            right: 2px;
-            width: 20px;
-            height: 20px;
-            background: #8B0000;
-            border: none;
+        .calendar-day-indicator {
+            width: 6px;
+            height: 6px;
+            background: var(--secondary);
             border-radius: 50%;
-            color: white;
-            font-size: 12px;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            margin-top: 4px;
+        }
+
+        /* LIST ITEMS */
+        .list-item {
+            background: var(--bg-card);
+            padding: 16px;
+            margin: 8px 16px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-item-content {
+            flex: 1;
+        }
+
+        .list-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .list-item-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .list-item-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* BADGES */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background: #d1f4e0;
+            color: #0f5132;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        /* MESSAGES */
+        .message {
+            position: fixed;
+            top: 90px;
+            left: 16px;
+            right: 16px;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 200;
+            animation: slideDown 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .message.success {
+            background: #d1f4e0;
+            color: #0f5132;
+            border-left: 4px solid #198754;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #842029;
+            border-left: 4px solid #dc3545;
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 16px;
             font-weight: 600;
         }
 
-        .calendar-day:hover .calendar-quick-add {
-            opacity: 1;
+        /* BREAKDOWN SECTION */
+        .breakdown-item {
+            background: var(--bg-card);
+            padding: 16px;
+            margin: 8px 0;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
         }
 
-        .calendar-quick-add:hover {
-            background: #DC143C;
+        .breakdown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
         }
 
-        @media (max-width: 768px) {
+        .breakdown-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .breakdown-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .breakdown-detail {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* MODAL/OVERLAY */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 150;
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .modal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-radius: 24px 24px 0 0;
+            padding: 24px;
+            z-index: 160;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            transform: translateY(0);
+        }
+
+        .modal-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 0 auto 20px;
+        }
+
+        /* DESKTOP FALLBACK */
+        @media (min-width: 768px) {
             body {
-                padding: 10px;
+                max-width: 480px;
+                margin: 0 auto;
+                box-shadow: 0 0 40px rgba(0,0,0,0.1);
             }
-            
-            .container {
-                border-radius: 8px;
-            }
-            
-            .header h1 {
-                font-size: 1.8em;
-            }
-            
-            .header p {
-                font-size: 0.9em;
-            }
-            
-            .content {
-                padding: 15px;
-            }
-            
-            .tabs {
-                overflow-x: auto;
-                overflow-y: hidden;
-                -webkit-overflow-scrolling: touch;
-                flex-wrap: nowrap;
-                gap: 5px;
-                scrollbar-width: none;
-                -ms-overflow-style: none;
-            }
-            
-            .tabs::-webkit-scrollbar {
-                display: none;
-            }
-            
-            .tab {
-                padding: 12px 15px;
-                font-size: 14px;
-                white-space: nowrap;
-                flex-shrink: 0;
-            }
-            
-            .grid-2, .grid-3 {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .time-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-                padding: 15px;
-            }
-            
-            .time-input {
-                padding: 12px;
-            }
-            
-            .time-input label {
-                font-size: 11px;
-            }
-            
-            .time-input input {
-                font-size: 16px;
-                padding: 8px;
-            }
-            
-            .form-group input, 
-            .form-group select {
-                padding: 14px;
-                font-size: 16px;
-            }
-            
-            .btn {
-                padding: 14px 20px;
-                font-size: 15px;
-                width: 100%;
-            }
-            
-            .btn-small {
-                padding: 10px 15px;
-                font-size: 13px;
-            }
-            
-            .section {
-                padding: 15px;
-            }
-            
-            .timesheet-table {
-                font-size: 12px;
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
-            
-            .timesheet-table th,
-            .timesheet-table td {
-                padding: 8px 4px;
-                font-size: 11px;
-            }
-            
-            .calendar-day {
-                min-height: 70px;
-                padding: 5px;
-            }
-            
-            .calendar-day-number {
-                font-size: 14px;
-            }
-            
-            .calendar-day-info {
-                font-size: 9px;
-            }
-            
-            .calendar-quick-add {
-                opacity: 1;
-            }
-            
-            .summary {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
-            .summary-card {
-                padding: 20px;
-            }
-            
-            .summary-card .value {
-                font-size: 1.8em;
-            }
-            
-            .calc-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .section div[style*="grid-template-columns: 1fr 1fr"] {
-                display: block !important;
-            }
-            
-            .section div[style*="grid-template-columns: 1fr 1fr"] > div {
-                margin-bottom: 20px;
-            }
-            
-            .overtime-item {
-                flex-direction: column !important;
-                text-align: center;
-                gap: 10px !important;
-            }
-            
-            .break-item {
-                flex-direction: column !important;
-                gap: 10px;
-            }
-            
-            .break-item > div {
-                width: 100% !important;
-            }
-            
-            div[style*="grid-template-columns: 1fr 1fr 1fr"] {
-                display: block !important;
-            }
-            
-            div[style*="grid-template-columns: 1fr 1fr 1fr"] > div {
-                margin-bottom: 15px;
-                padding: 0 !important;
-                border: none !important;
-            }
-            
-            .config-item {
-                flex-wrap: wrap;
-            }
-            
-            .config-item input {
-                min-width: 100%;
-            }
+        }
+
+        /* HIDDEN ELEMENTS */
+        .hidden {
+            display: none !important;
+        }
+
+        /* PAUSE MANAGEMENT */
+        .pause-item {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 2px solid var(--border);
+        }
+
+        .pause-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .pause-inputs {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* TABLE RESPONSIVE */
+        .table-scroll {
+            overflow-x: auto;
+            margin: 0 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            font-size: 13px;
+        }
+
+        table th {
+            background: var(--primary);
+            color: white;
+            padding: 12px 8px;
+            font-weight: 600;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* DIVIDER */
+        .divider {
+            height: 12px;
+            background: transparent;
+        }
+
+        /* SECTION PADDING */
+        .section {
+            padding: 0;
+        }
+
+        /* CALCULATION PREVIEW */
+        .calc-preview {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .calc-preview-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calc-preview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .calc-preview-item {
+            text-align: center;
+        }
+
+        .calc-preview-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .calc-preview-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>💼 Gestione Orari Lavorativi Pro</h1>
-            <p>Sistema avanzato per la gestione completa degli orari di lavoro - Versione v3.1 Mobile Optimized</p>
+    <!-- TOP HEADER -->
+    <div class="top-header">
+        <h1>Orari Lavoro Pro</h1>
+        <p>Gestione completa orari e compensi</p>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content-wrapper">
+        <!-- TAB: INSERIMENTO -->
+        <div id="tab-inserimento" class="tab-content active">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📅 Data e Trasferta</div>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Data</label>
+                    <input type="date" id="workDate" class="form-input">
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Tipo Trasferta</label>
+                    <select id="travelType" class="form-select">
+                        <option value="">Nessuna</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">⏰ Orari</div>
+                </div>
+                <div class="time-grid">
+                    <div class="time-card">
+                        <span class="time-label">🟢 Entrata</span>
+                        <input type="time" id="entryTime">
+                    </div>
+                    <div class="time-card">
+                        <span class="time-label">⏸️ Pausa</span>
+                        <input type="time" id="breakStart">
+                    </div>
+                    <div class="time-card">
+                        <span class="time-label">▶️ Rientro</span>
+                        <input type="time" id="breakEnd">
+                    </div>
+                    <div class="time-card">
+                        <span class="time-label">🔴 Uscita</span>
+                        <input type="time" id="exitTime">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">⏸️ Pause Extra</div>
+                    <button class="btn btn-small btn-secondary" onclick="addBreak()">+ Aggiungi</button>
+                </div>
+                <div id="breaksContainer">
+                    <div class="empty-state">
+                        <div class="empty-state-text">Nessuna pausa aggiuntiva</div>
+                    </div>
+                </div>
+                <div id="breaksSummary" class="hidden">
+                    <div style="text-align: center; padding: 12px; background: #f8f9fa; border-radius: 8px; margin-top: 12px;">
+                        <span style="font-weight: 600;">Totale pause extra: </span>
+                        <span id="totalBreakTime" style="color: var(--primary); font-weight: 700;">0h 00m</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="autoCalc" class="calc-preview hidden">
+                <div class="calc-preview-title">📊 Anteprima Calcolo</div>
+                <div class="calc-preview-grid">
+                    <div class="calc-preview-item">
+                        <div class="calc-preview-label">Ore Lavoro</div>
+                        <div class="calc-preview-value" id="calcWork">--</div>
+                    </div>
+                    <div class="calc-preview-item">
+                        <div class="calc-preview-label">Straordinari</div>
+                        <div class="calc-preview-value" id="calcOvertime">--</div>
+                    </div>
+                    <div class="calc-preview-item">
+                        <div class="calc-preview-label">Ore Notturne</div>
+                        <div class="calc-preview-value" id="calcNight">--</div>
+                    </div>
+                    <div class="calc-preview-item">
+                        <div class="calc-preview-label">Compenso</div>
+                        <div class="calc-preview-value" id="calcPay">--</div>
+                    </div>
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: white; border-radius: 8px; font-size: 13px; color: var(--text-secondary);">
+                    <strong>Tipo:</strong> <span id="calcDayType">--</span><br>
+                    <strong>Pausa:</strong> <span id="calcBreak">--</span>
+                </div>
+                <div id="calcBreakdown" style="margin-top: 12px; padding: 12px; background: white; border-radius: 8px; font-size: 12px; color: var(--text-secondary);"></div>
+            </div>
+
+            <div class="card">
+                <div class="form-row">
+                    <label class="form-label">Note (opzionali)</label>
+                    <input type="text" id="notes" class="form-input" placeholder="Aggiungi una nota...">
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="addWorkDay()">✓ Salva</button>
+                    <button class="btn btn-secondary" onclick="clearForm()">⟲ Pulisci</button>
+                </div>
+            </div>
+
+            <div id="message"></div>
         </div>
 
-        <div class="content">
-            <div class="tabs">
-                <button class="tab active" onclick="showTab('inserimento')">⏰ Inserimento</button>
-                <button class="tab" onclick="showTab('calendario')">📅 Calendario</button>
-                <button class="tab" onclick="showTab('configurazione')">⚙️ Configurazione</button>
-                <button class="tab" onclick="showTab('registro')">📊 Registro</button>
-                <button class="tab" onclick="showTab('riepilogo')">📈 Riepilogo</button>
+        <!-- TAB: CALENDARIO -->
+        <div id="tab-calendario" class="tab-content">
+            <div class="calendar-header-nav">
+                <button class="calendar-nav-btn" onclick="changeMonth(-1)">‹</button>
+                <div class="calendar-title" id="calendarTitle">Marzo 2025</div>
+                <button class="calendar-nav-btn" onclick="changeMonth(1)">›</button>
             </div>
 
-            <div id="tab-calendario" class="tab-content">
-                <div class="section">
-                    <h2>📅 Calendario Mensile</h2>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px; background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%); border-radius: 8px; color: white; flex-wrap: wrap; gap: 10px;">
-                        <button class="btn" onclick="changeMonth(-1)" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">⬅️ Precedente</button>
-                        <h3 id="calendarTitle" style="margin: 0; font-size: 1.5em; font-weight: 600;">Marzo 2025</h3>
-                        <button class="btn" onclick="changeMonth(1)" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">Successivo ➡️</button>
-                    </div>
-                    
-                    <div class="calendar-container">
-                        <div class="calendar-header">
-                            <div class="calendar-day-header">Lun</div>
-                            <div class="calendar-day-header">Mar</div>
-                            <div class="calendar-day-header">Mer</div>
-                            <div class="calendar-day-header">Gio</div>
-                            <div class="calendar-day-header">Ven</div>
-                            <div class="calendar-day-header sab">Sab</div>
-                            <div class="calendar-day-header dom">Dom</div>
-                        </div>
-                        <div id="calendarGrid" class="calendar-grid">
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top: 20px; padding: 15px; background: #ffffff; border-radius: 8px; border-left: 4px solid #8B0000; border: 1px solid #e9ecef;">
-                        <h4 style="margin-bottom: 10px; color: #8B0000; font-weight: 600;">📋 Legenda</h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 14px;">
-                            <div><span style="display: inline-block; width: 15px; height: 15px; background: #198754; border-radius: 3px; margin-right: 8px;"></span>✅ Giornata completa</div>
-                            <div><span style="display: inline-block; width: 15px; height: 15px; background: #ffc107; border-radius: 3px; margin-right: 8px;"></span>⏳ Giornata in corso</div>
-                            <div><span style="display: inline-block; width: 15px; height: 15px; background: #dc3545; border-radius: 3px; margin-right: 8px;"></span>❌ Giornata incompleta</div>
-                            <div><span style="display: inline-block; width: 15px; height: 15px; background: #8B0000; border-radius: 3px; margin-right: 8px;"></span>Giorno corrente</div>
-                            <div><span style="display: inline-block; width: 15px; height: 15px; background: #ff9800; border-radius: 3px; margin-right: 8px;"></span>Weekend</div>
-                            <div><span style="display: inline-block; width: 15px; height: 15px; background: #adb5bd; border-radius: 3px; margin-right: 8px;"></span>Altro mese</div>
-                        </div>
-                        <div style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 5px; font-size: 13px; color: #495057;">
-                            <strong>💡 Suggerimento:</strong> Puoi salvare una giornata anche con solo l'orario di entrata per tenerla tracciata. Completa con l'uscita quando finisci di lavorare!
-                        </div>
-                    </div>
+            <div class="calendar-grid">
+                <div class="calendar-day-header">L</div>
+                <div class="calendar-day-header">M</div>
+                <div class="calendar-day-header">M</div>
+                <div class="calendar-day-header">G</div>
+                <div class="calendar-day-header">V</div>
+                <div class="calendar-day-header">S</div>
+                <div class="calendar-day-header">D</div>
+            </div>
+
+            <div class="calendar-grid" id="calendarGrid"></div>
+
+            <div class="divider"></div>
+
+            <div id="dayDetails" class="card hidden">
+                <div id="dayDetailsContent"></div>
+            </div>
+        </div>
+
+        <!-- TAB: CONFIGURAZIONE -->
+        <div id="tab-configurazione" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">⚙️ Parametri Base</div>
                 </div>
-                
-                <div class="section" id="dayDetails" style="display: none;">
-                    <h2>📋 Dettaglio Giorno Selezionato</h2>
-                    <div id="dayDetailsContent">
-                    </div>
+                <div class="form-row">
+                    <label class="form-label">Paga Oraria (€)</label>
+                    <input type="number" id="hourlyRate" class="form-input" value="15" step="0.01">
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Ore Standard/Giorno</label>
+                    <input type="number" id="standardHours" class="form-input" value="8" step="0.5">
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Pausa Standard (minuti)</label>
+                    <input type="number" id="standardBreak" class="form-input" value="60" step="15">
                 </div>
             </div>
 
-            <div id="tab-inserimento" class="tab-content active">
-                <div class="section">
-                    <h2>⏰ Inserimento Giornata Lavorativa</h2>
-                    
-                    <div class="grid grid-2" style="margin-bottom: 25px;">
-                        <div class="form-group">
-                            <label for="workDate">📅 Data</label>
-                            <input type="date" id="workDate">
-                        </div>
-                        <div class="form-group">
-                            <label for="travelType">✈️ Tipo Trasferta</label>
-                            <select id="travelType">
-                                <option value="">Nessuna</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="time-grid">
-                        <div class="time-input">
-                            <label>🟢 Entrata</label>
-                            <input type="time" id="entryTime">
-                        </div>
-                        <div class="time-input">
-                            <label>⏸️ Pausa</label>
-                            <input type="time" id="breakStart">
-                        </div>
-                        <div class="time-input">
-                            <label>▶️ Rientro</label>
-                            <input type="time" id="breakEnd">
-                        </div>
-                        <div class="time-input">
-                            <label>🔴 Uscita</label>
-                            <input type="time" id="exitTime">
-                        </div>
-                    </div>
-
-                    <div class="section" style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-radius: 8px; border-left: 4px solid #17a2b8;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                            <h4 style="margin: 0; color: #17a2b8; font-weight: 600;">⏸️ Pause Aggiuntive</h4>
-                            <button type="button" class="btn btn-info btn-small" onclick="addBreak()">➕ Aggiungi Pausa</button>
-                        </div>
-                        
-                        <div id="breaksContainer">
-                            <div style="text-align: center; color: #6c757d; padding: 20px;">
-                                <em>Nessuna pausa aggiuntiva. La pausa principale è già inclusa sopra.</em>
-                            </div>
-                        </div>
-                        
-                        <div id="breaksSummary" style="margin-top: 15px; padding: 10px; background: white; border-radius: 5px; border: 1px solid #e9ecef; display: none;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span><strong>📊 Pause Aggiuntive:</strong></span>
-                                <span id="totalBreakTime" style="font-weight: 600; color: #17a2b8;">0h 00m</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="auto-calc" id="autoCalc" style="display: none;">
-                        <h4>📊 Calcolo Automatico Dettagliato</h4>
-                        <div class="calc-grid">
-                            <div class="calc-item">
-                                <div class="label">Tipo Giorno</div>
-                                <div class="value" id="calcDayType">--</div>
-                            </div>
-                            <div class="calc-item">
-                                <div class="label">Pausa Totale</div>
-                                <div class="value" id="calcBreak">--</div>
-                            </div>
-                            <div class="calc-item">
-                                <div class="label">Ore Lavorate</div>
-                                <div class="value" id="calcWork">--</div>
-                            </div>
-                            <div class="calc-item">
-                                <div class="label">Ore Notturne</div>
-                                <div class="value" id="calcNight">--</div>
-                            </div>
-                            <div class="calc-item">
-                                <div class="label">Straordinari</div>
-                                <div class="value" id="calcOvertime">--</div>
-                            </div>
-                            <div class="calc-item">
-                                <div class="label">Compenso</div>
-                                <div class="value" id="calcPay">--</div>
-                            </div>
-                        </div>
-                        <div id="calcBreakdown" style="margin-top: 15px; padding: 10px; background: white; border-radius: 5px; font-size: 12px; color: #666;">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-2" style="margin-top: 20px;">
-                        <div class="form-group">
-                            <label for="notes">📝 Note</label>
-                            <input type="text" id="notes" placeholder="Note opzionali...">
-                        </div>
-                        <div style="display: flex; align-items: end; gap: 10px; flex-wrap: wrap;">
-                            <button class="btn btn-success" onclick="addWorkDay()" style="flex: 1; min-width: 150px;">➕ Aggiungi Giornata</button>
-                            <button class="btn btn-info" onclick="clearForm()" style="flex: 1; min-width: 150px;">🔄 Pulisci</button>
-                        </div>
-                    </div>
-
-                    <div id="message"></div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">ℹ️ Maggiorazioni Auto</div>
+                </div>
+                <div style="font-size: 13px; line-height: 1.8;">
+                    <div style="margin-bottom: 8px;"><strong>Feriali oltre 8h:</strong> +25%</div>
+                    <div style="margin-bottom: 8px;"><strong>Sabato 1-3h:</strong> +25%</div>
+                    <div style="margin-bottom: 8px;"><strong>Sabato oltre 3h:</strong> +50%</div>
+                    <div style="margin-bottom: 8px;"><strong>Domenica:</strong> +45%</div>
+                    <div style="margin-bottom: 8px;"><strong>Notturno normale:</strong> +15%</div>
+                    <div style="margin-bottom: 8px;"><strong>Notturno straord.:</strong> +55%</div>
                 </div>
             </div>
 
-            <div id="tab-configurazione" class="tab-content">
-                <div class="section">
-                    <h2>⚙️ Configurazione Base</h2>
-                    <div class="grid grid-3">
-                        <div class="form-group">
-                            <label for="hourlyRate">💰 Paga Oraria (€)</label>
-                            <input type="number" id="hourlyRate" value="15" step="0.01">
-                        </div>
-                        <div class="form-group">
-                            <label for="standardHours">⏱️ Ore Standard/Giorno</label>
-                            <input type="number" id="standardHours" value="8" step="0.5">
-                        </div>
-                        <div class="form-group">
-                            <label for="standardBreak">☕ Pausa Standard (min)</label>
-                            <input type="number" id="standardBreak" value="60" step="15">
-                        </div>
-                    </div>
-                    <div style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-radius: 8px; border-left: 4px solid #198754; border: 1px solid #e9ecef;">
-                        <h4 style="margin-bottom: 10px; color: #198754; font-weight: 600;">ℹ️ Maggiorazioni Automatiche Attive</h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 14px; color: #495057;">
-                            <div><strong>Feriali oltre 8h:</strong> +25%</div>
-                            <div><strong>Sabato 1-3h:</strong> +25%</div>
-                            <div><strong>Sabato oltre 3h:</strong> +50%</div>
-                            <div><strong>Domenica:</strong> +45%</div>
-                            <div><strong>Notturno normale:</strong> +15%</div>
-                            <div><strong>Notturno straordinario:</strong> +55%</div>
-                        </div>
-                    </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">✈️ Trasferte</div>
                 </div>
+                <div class="form-row">
+                    <label class="form-label">Nome Tipo</label>
+                    <input type="text" id="newTravelName" class="form-input" placeholder="es. Nazionale">
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Importo Fisso (€)</label>
+                    <input type="number" id="newTravelAmount" class="form-input" placeholder="15" step="0.50">
+                </div>
+                <button class="btn btn-success" onclick="addTravelType()">+ Aggiungi Tipo Trasferta</button>
+                <div class="divider"></div>
+                <div id="travelList"></div>
+            </div>
 
-                <div class="section">
-                    <h2>✈️ Gestione Tipi Trasferte</h2>
-                    <div style="margin-bottom: 20px;">
-                        <div class="grid grid-3">
-                            <div class="form-group">
-                                <label for="newTravelName">Nome Tipo</label>
-                                <input type="text" id="newTravelName" placeholder="es. Nazionale, Estero...">
-                            </div>
-                            <div class="form-group">
-                                <label for="newTravelAmount">Importo Fisso (€)</label>
-                                <input type="number" id="newTravelAmount" placeholder="15" step="0.50">
-                            </div>
-                            <div style="display: flex; align-items: end;">
-                                <button class="btn btn-success" onclick="addTravelType()">➕ Aggiungi</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="travelList"></div>
+            <div class="card">
+                <button class="btn btn-primary" onclick="saveConfig()">💾 Salva Configurazione</button>
+            </div>
+        </div>
+
+        <!-- TAB: REGISTRO -->
+        <div id="tab-registro" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📊 Tutte le Giornate</div>
+                    <div class="card-badge" id="totalDaysCount">0</div>
                 </div>
             </div>
 
-            <div id="tab-registro" class="tab-content">
-                <div class="section">
-                    <h2>📊 Registro Orari Completo</h2>
-                    <div style="overflow-x: auto;">
-                        <table class="timesheet-table">
-                            <thead>
-                                <tr>
-                                    <th>Data</th>
-                                    <th>Entrata</th>
-                                    <th>Pausa</th>
-                                    <th>Rientro</th>
-                                    <th>Uscita</th>
-                                    <th>Pause Agg.</th>
-                                    <th>Pausa Tot.</th>
-                                    <th>Ore Lav.</th>
-                                    <th>Straord.</th>
-                                    <th>Notturne</th>
-                                    <th>Tipo Giorno</th>
-                                    <th>Trasferta</th>
-                                    <th>Compenso</th>
-                                    <th>Note</th>
-                                    <th>Azioni</th>
-                                </tr>
-                            </thead>
-                            <tbody id="timesheet-body">
-                            </tbody>
-                        </table>
-                    </div>
+            <div id="workDaysList"></div>
+
+            <div class="empty-state" id="emptyRegistry" style="display: none;">
+                <div class="empty-state-icon">📋</div>
+                <div class="empty-state-text">Nessuna giornata registrata</div>
+            </div>
+        </div>
+
+        <!-- TAB: RIEPILOGO -->
+        <div id="tab-riepilogo" class="tab-content">
+            <div class="card">
+                <div class="form-row">
+                    <label class="form-label">📅 Seleziona Mese</label>
+                    <select id="monthSelector" class="form-select" onchange="updateMonthFilter()">
+                        <option value="">Caricamento...</option>
+                    </select>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 13px; color: var(--text-secondary);">
+                    <span>Giornate: <strong id="monthDaysCount">0</strong></span>
+                    <span>Ore totali: <strong id="monthHoursCount">0h</strong></span>
                 </div>
             </div>
 
-            <div id="tab-riepilogo" class="tab-content">
-                <div style="margin-bottom: 20px; padding: 20px; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-radius: 8px; border-left: 4px solid #4a90e2; border: 1px solid #e9ecef;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
-                        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                            <label for="monthSelector" style="font-weight: 600; color: #4a90e2; font-size: 16px;">📅 Visualizza mese:</label>
-                            <select id="monthSelector" onchange="updateMonthFilter()" style="padding: 10px 15px; border: 2px solid #4a90e2; border-radius: 6px; font-size: 16px; font-weight: 500; background: white; min-width: 200px;">
-                                <option value="">Caricamento...</option>
-                            </select>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 20px; color: #6c757d; font-size: 14px; flex-wrap: wrap;">
-                            <span>📊 Giornate: <strong id="monthDaysCount" style="color: #4a90e2;">0</strong></span>
-                            <span>💼 Ore: <strong id="monthHoursCount" style="color: #198754;">0h</strong></span>
-                        </div>
-                    </div>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="summary-label">Ore Ordinarie</div>
+                    <div class="summary-value" id="regularHours">0h</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Straordinari</div>
+                    <div class="summary-value" id="overtimeHours">0h</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Ore Notturne</div>
+                    <div class="summary-value" id="nightHours">0h</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Trasferte</div>
+                    <div class="summary-value" id="travelDays">0</div>
+                </div>
+                <div class="summary-card full">
+                    <div class="summary-label">💰 TOTALE MENSILE</div>
+                    <div class="summary-value" id="monthlyTotal">€0</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">⚡ Breakdown Dettagliato</div>
+                </div>
+                <div id="breakdownSubtitle" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+                    Analisi compensi aggiuntivi
                 </div>
 
-                <div class="summary">
-                    <div class="summary-card">
-                        <h3>Ore Ordinarie Lavorate</h3>
-                        <div class="value" id="regularHours">0h</div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Ore Straordinari</h3>
-                        <div class="value" id="overtimeHours">0h</div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Ore Notturne</h3>
-                        <div class="value" id="nightHours">0h</div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Giorni Trasferta</h3>
-                        <div class="value" id="travelDays">0</div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Totale Mensile</h3>
-                        <div class="value" id="monthlyTotal">€0</div>
-                    </div>
-                </div>
-
-                <div class="section" style="margin-top: 30px;">
-                    <div style="background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-                        <h2 style="margin: 0; color: white; border: none; padding: 0;">⚡ BREAKDOWN DETTAGLIATO STRAORDINARI E MAGGIORAZIONI</h2>
-                        <p style="margin: 5px 0 0 0; opacity: 0.9;" id="breakdownSubtitle">Analisi completa di tutti i compensi aggiuntivi del mese</p>
-                    </div>
+                <div style="background: #f8f9fa; padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+                    <div style="font-weight: 700; margin-bottom: 12px; color: var(--primary);">📅 Straordinari per Tipo</div>
                     
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px;">
-                        <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef;">
-                            <h3 style="color: #8B0000; margin-bottom: 20px; font-size: 1.2em; border-bottom: 2px solid #8B0000; padding-bottom: 10px;">📅 Straordinari per Tipo Giorno</h3>
-                            
-                            <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 10px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #198754;">
-                                <div>
-                                    <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">🟢 Feriali (oltre 8h) +25%</div>
-                                    <div style="font-size: 12px; color: #6c757d;" id="weekdayBreakdown">0h 00m × €0.00 × 1.25 = €0.00</div>
-                                </div>
-                                <div style="font-size: 18px; font-weight: 700; color: #198754;" id="weekdayAmount">€0.00</div>
-                            </div>
-                            
-                            <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 10px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #ff9800;">
-                                <div>
-                                    <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">🟠 Sabato (prime 3h) +25%</div>
-                                    <div style="font-size: 12px; color: #6c757d;" id="saturdayFirstBreakdown">0h 00m × €0.00 × 1.25 = €0.00</div>
-                                </div>
-                                <div style="font-size: 18px; font-weight: 700; color: #ff9800;" id="saturdayFirstAmount">€0.00</div>
-                            </div>
-                            
-                            <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 10px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #ff5722;">
-                                <div>
-                                    <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">🔴 Sabato (oltre 3h) +50%</div>
-                                    <div style="font-size: 12px; color: #6c757d;" id="saturdayRestBreakdown">0h 00m × €0.00 × 1.50 = €0.00</div>
-                                </div>
-                                <div style="font-size: 18px; font-weight: 700; color: #ff5722;" id="saturdayRestAmount">€0.00</div>
-                            </div>
-                            
-                            <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 15px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #dc3545;">
-                                <div>
-                                    <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">🔴 Domenica (tutto) +45%</div>
-                                    <div style="font-size: 12px; color: #6c757d;" id="sundayBreakdown">0h 00m × €0.00 × 1.45 = €0.00</div>
-                                </div>
-                                <div style="font-size: 18px; font-weight: 700; color: #dc3545;" id="sundayAmount">€0.00</div>
-                            </div>
-                            
-                            <div style="padding: 15px; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius: 6px; border: 1px solid #2196f3;">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-weight: 600; color: #1976d2;">📊 Subtotale Straordinari:</span>
-                                    <span style="font-size: 20px; font-weight: 700; color: #1976d2;" id="overtimeSubtotal">€0.00</span>
-                                </div>
-                            </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-header">
+                            <div class="breakdown-label">🟢 Feriali (+25%)</div>
+                            <div class="breakdown-value" id="weekdayAmount">€0</div>
                         </div>
-                        
-                        <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef;">
-                            <h3 style="color: #8B0000; margin-bottom: 20px; font-size: 1.2em; border-bottom: 2px solid #8B0000; padding-bottom: 10px;">🌙 Maggiorazioni Speciali</h3>
-                            
-                            <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 10px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #4a90e2;">
-                                <div>
-                                    <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">🌙 Notturno Normale +15%</div>
-                                    <div style="font-size: 12px; color: #6c757d;" id="nightNormalBreakdown">0h 00m × €0.00 × 0.15 = €0.00</div>
-                                </div>
-                                <div style="font-size: 18px; font-weight: 700; color: #4a90e2;" id="nightNormalAmount">€0.00</div>
-                            </div>
-                            
-                            <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 10px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #673ab7;">
-                                <div>
-                                    <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">🌜 Notturno Straord. +55%</div>
-                                    <div style="font-size: 12px; color: #6c757d;" id="nightOvertimeBreakdown">0h 00m × €0.00 × 0.55 = €0.00</div>
-                                </div>
-                                <div style="font-size: 18px; font-weight: 700; color: #673ab7;" id="nightOvertimeAmount">€0.00</div>
-                            </div>
-                            
-                            <div class="overtime-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 15px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #00bcd4;">
-                                <div>
-                                    <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">✈️ Trasferte</div>
-                                    <div style="font-size: 12px; color: #6c757d;" id="travelBreakdown">0 giorni × €0.00 = €0.00</div>
-                                </div>
-                                <div style="font-size: 18px; font-weight: 700; color: #00bcd4;" id="travelAmount">€0.00</div>
-                            </div>
-                            
-                            <div style="padding: 15px; background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-radius: 6px; border: 1px solid #9c27b0; margin-bottom: 15px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-weight: 600; color: #7b1fa2;">🎯 Subtotale Maggiorazioni:</span>
-                                    <span style="font-size: 20px; font-weight: 700; color: #7b1fa2;" id="bonusSubtotal">€0.00</span>
-                                </div>
-                            </div>
-                            
-                            <div style="padding: 15px; background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%); border-radius: 6px; border: 1px solid #4caf50;">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-weight: 600; color: #2e7d32;">💰 TOTALE MAGGIORAZIONI:</span>
-                                    <span style="font-size: 22px; font-weight: 700; color: #2e7d32;" id="totalBonuses">€0.00</span>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="breakdown-detail" id="weekdayBreakdown">0h 00m × €0.00 × 1.25</div>
                     </div>
-                    
-                    <div style="background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%); color: white; padding: 25px; border-radius: 8px; text-align: center;">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: center;">
-                            <div>
-                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">💵 Paga Base:</div>
-                                <div style="font-size: 24px; font-weight: 600;" id="basePay">€0.00</div>
-                            </div>
-                            <div>
-                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">➕ Maggiorazioni:</div>
-                                <div style="font-size: 24px; font-weight: 600;" id="totalBonusesDisplay">€0.00</div>
-                            </div>
-                            <div style="border-left: 2px solid rgba(255,255,255,0.3); padding-left: 20px;">
-                                <div style="font-size: 16px; opacity: 0.9; margin-bottom: 5px;">🎯 TOTALE FINALE:</div>
-                                <div style="font-size: 32px; font-weight: 700;" id="grandTotal">€0.00</div>
-                            </div>
+
+                    <div class="breakdown-item">
+                        <div class="breakdown-header">
+                            <div class="breakdown-label">🟠 Sab 1-3h (+25%)</div>
+                            <div class="breakdown-value" id="saturdayFirstAmount">€0</div>
                         </div>
+                        <div class="breakdown-detail" id="saturdayFirstBreakdown">0h 00m × €0.00 × 1.25</div>
+                    </div>
+
+                    <div class="breakdown-item">
+                        <div class="breakdown-header">
+                            <div class="breakdown-label">🔴 Sab 3h+ (+50%)</div>
+                            <div class="breakdown-value" id="saturdayRestAmount">€0</div>
+                        </div>
+                        <div class="breakdown-detail" id="saturdayRestBreakdown">0h 00m × €0.00 × 1.50</div>
+                    </div>
+
+                    <div class="breakdown-item">
+                        <div class="breakdown-header">
+                            <div class="breakdown-label">🔴 Domenica (+45%)</div>
+                            <div class="breakdown-value" id="sundayAmount">€0</div>
+                        </div>
+                        <div class="breakdown-detail" id="sundayBreakdown">0h 00m × €0.00 × 1.45</div>
                     </div>
                 </div>
 
-                <div class="section">
-                    <h2>🔧 Azioni</h2>
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px;">
-                        <button class="btn btn-info" onclick="importFromExcelFixed()">📁 Importa Excel</button>
-                        <button class="btn btn-success" onclick="exportToExcelFiltered()">📄 Esporta Excel (Mese)</button>
-                        <button class="btn btn-warning" onclick="exportToPDFFiltered()">📑 Esporta PDF (Mese)</button>
-                        <button class="btn btn-danger" onclick="clearAllData()">🗑️ Cancella Tutto</button>
-                        <button class="btn" onclick="saveConfig()">💾 Forza Salvataggio</button>
+                <div style="background: #f8f9fa; padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+                    <div style="font-weight: 700; margin-bottom: 12px; color: var(--primary);">🌙 Maggiorazioni Speciali</div>
+                    
+                    <div class="breakdown-item">
+                        <div class="breakdown-header">
+                            <div class="breakdown-label">🌙 Nott. Normale (+15%)</div>
+                            <div class="breakdown-value" id="nightNormalAmount">€0</div>
+                        </div>
+                        <div class="breakdown-detail" id="nightNormalBreakdown">0h 00m × €0.00 × 0.15</div>
                     </div>
-                    <div style="margin-top: 15px; padding: 15px; background: #ffffff; border-radius: 8px; border-left: 4px solid #0dcaf0; border: 1px solid #e9ecef;">
-                        <h4 style="margin-bottom: 10px; color: #0dcaf0; font-weight: 600;">ℹ️ Informazioni v3.1 Mobile Optimized</h4>
-                        <p style="margin: 5px 0; font-size: 14px; color: #495057;">
-                            <strong>Novità v3.1:</strong> Riepilogo separato per ogni mese + Export per mese selezionato!
-                        </p>
-                        <p style="margin: 5px 0; font-size: 14px; color: #495057;">
-                            <strong>Mobile:</strong> Interfaccia ottimizzata per smartphone e tablet
-                        </p>
-                        <p style="margin: 5px 0; font-size: 14px; color: #495057;">
-                            <strong>Nota:</strong> Le configurazioni si salvano automaticamente nel browser
-                        </p>
+
+                    <div class="breakdown-item">
+                        <div class="breakdown-header">
+                            <div class="breakdown-label">🌜 Nott. Straord. (+55%)</div>
+                            <div class="breakdown-value" id="nightOvertimeAmount">€0</div>
+                        </div>
+                        <div class="breakdown-detail" id="nightOvertimeBreakdown">0h 00m × €0.00 × 0.55</div>
                     </div>
+
+                    <div class="breakdown-item">
+                        <div class="breakdown-header">
+                            <div class="breakdown-label">✈️ Trasferte</div>
+                            <div class="breakdown-value" id="travelAmount">€0</div>
+                        </div>
+                        <div class="breakdown-detail" id="travelBreakdown">0 giorni</div>
+                    </div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #d1f4e0 0%, #c8e6c9 100%); padding: 20px; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 13px; margin-bottom: 8px; font-weight: 600;">💰 Paga Base</div>
+                    <div style="font-size: 24px; font-weight: 700; margin-bottom: 16px;" id="basePay">€0</div>
+                    <div style="font-size: 13px; margin-bottom: 8px; font-weight: 600;">➕ Maggiorazioni</div>
+                    <div style="font-size: 24px; font-weight: 700; margin-bottom: 16px;" id="totalBonusesDisplay">€0</div>
+                    <div style="height: 2px; background: rgba(0,0,0,0.1); margin: 16px 0;"></div>
+                    <div style="font-size: 14px; margin-bottom: 8px; font-weight: 700;">🎯 TOTALE FINALE</div>
+                    <div style="font-size: 32px; font-weight: 700;" id="grandTotal">€0</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🔧 Azioni</div>
+                </div>
+                <div style="display: grid; gap: 12px;">
+                    <button class="btn btn-success" onclick="importFromExcelFixed()">📁 Importa Excel</button>
+                    <button class="btn btn-primary" onclick="exportToExcelFiltered()">📄 Esporta Excel</button>
+                    <button class="btn btn-primary" onclick="exportToPDFFiltered()">📑 Esporta PDF</button>
+                    <button class="btn btn-danger" onclick="clearAllData()">🗑️ Cancella Tutto</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- FLOATING ACTION BUTTON -->
+    <button class="fab" id="fabButton" onclick="goToInserimento()">+</button>
+
+    <!-- BOTTOM NAVIGATION -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="showTab('inserimento')" data-tab="inserimento">
+            <div class="nav-icon">✏️</div>
+            <div class="nav-label">Inserisci</div>
+        </button>
+        <button class="nav-item" onclick="showTab('calendario')" data-tab="calendario">
+            <div class="nav-icon">📅</div>
+            <div class="nav-label">Calendario</div>
+        </button>
+        <button class="nav-item" onclick="showTab('registro')" data-tab="registro">
+            <div class="nav-icon">📊</div>
+            <div class="nav-label">Registro</div>
+        </button>
+        <button class="nav-item" onclick="showTab('riepilogo')" data-tab="riepilogo">
+            <div class="nav-icon">📈</div>
+            <div class="nav-label">Riepilogo</div>
+        </button>
+        <button class="nav-item" onclick="showTab('configurazione')" data-tab="configurazione">
+            <div class="nav-icon">⚙️</div>
+            <div class="nav-label">Config</div>
+        </button>
+    </div>
+
     <script>
+        // STESSA LOGICA IDENTICA - Solo UI cambiata
         let workDays = [];
         let travelTypes = [
             { name: 'In Regione', amount: 10 },
@@ -1144,8 +1141,6 @@
         });
 
         function initializeApp() {
-            console.log('🚀 Inizializzazione Gestione Orari Pro v3.1 Mobile Optimized');
-            
             const configLoaded = loadConfig();
             const workDaysCount = loadWorkDays();
             
@@ -1157,7 +1152,7 @@
             
             updateTravelDropdown();
             updateTravelList();
-            updateTable();
+            updateWorkDaysList();
             populateMonthSelector();
             updateSummary();
             generateCalendar();
@@ -1165,23 +1160,43 @@
             addConfigListeners();
             
             if (configLoaded || workDaysCount > 0) {
-                let message = '✅ ';
-                if (configLoaded) message += 'Configurazione caricata';
-                if (workDaysCount > 0) {
-                    if (message.length > 3) message += ' + ';
-                    message += `${workDaysCount} giornate caricate`;
-                }
-                message += ' - v3.1 Mobile Optimized attivo!';
-                showMessage(message, 'success');
+                showMessage(`Caricati ${workDaysCount} record`, 'success');
             }
-            
-            console.log('📱 Sistema v3.1 Mobile pronto');
         }
 
         function addConfigListeners() {
             ['hourlyRate', 'standardHours', 'standardBreak'].forEach(id => {
                 document.getElementById(id).addEventListener('change', autoSaveConfig);
             });
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            // Gestisci FAB visibility
+            const fab = document.getElementById('fabButton');
+            if (tabName === 'inserimento' || tabName === 'configurazione') {
+                fab.classList.add('hidden');
+            } else {
+                fab.classList.remove('hidden');
+            }
+
+            // Se vai su registro, aggiorna lista
+            if (tabName === 'registro') {
+                updateWorkDaysList();
+            }
+        }
+
+        function goToInserimento() {
+            showTab('inserimento');
         }
 
         function addBreak() {
@@ -1214,47 +1229,37 @@
             
             if (additionalBreaks.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align: center; color: #6c757d; padding: 20px;">
-                        <em>Nessuna pausa aggiuntiva. La pausa principale è già inclusa sopra.</em>
+                    <div class="empty-state">
+                        <div class="empty-state-text">Nessuna pausa aggiuntiva</div>
                     </div>
                 `;
-                document.getElementById('breaksSummary').style.display = 'none';
+                document.getElementById('breaksSummary').classList.add('hidden');
                 return;
             }
             
             let html = '';
             additionalBreaks.forEach((breakItem, index) => {
                 html += `
-                    <div class="break-item" style="display: flex; align-items: center; gap: 15px; padding: 15px; background: white; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e9ecef;">
-                        <div style="flex: 0 0 auto; font-weight: 600; color: #17a2b8;">
-                            Pausa ${index + 2}:
+                    <div class="pause-item">
+                        <div class="pause-header">
+                            <span style="font-weight: 600;">Pausa ${index + 2}</span>
+                            <button class="btn btn-small btn-danger" onclick="removeBreak('${breakItem.id}')">🗑️</button>
                         </div>
-                        <div style="flex: 1; display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center;">
-                            <div>
-                                <label style="font-size: 12px; color: #6c757d; margin-bottom: 5px; display: block;">Inizio</label>
-                                <input type="time" id="${breakItem.id}_start" value="${breakItem.start}" 
-                                       onchange="updateBreak('${breakItem.id}', 'start', this.value)"
-                                       style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 16px;">
-                            </div>
-                            <div style="text-align: center; color: #6c757d; font-weight: bold;">→</div>
-                            <div>
-                                <label style="font-size: 12px; color: #6c757d; margin-bottom: 5px; display: block;">Fine</label>
-                                <input type="time" id="${breakItem.id}_end" value="${breakItem.end}"
-                                       onchange="updateBreak('${breakItem.id}', 'end', this.value)"
-                                       style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 16px;">
-                            </div>
-                        </div>
-                        <div style="flex: 0 0 auto;">
-                            <button type="button" class="btn btn-small btn-danger" onclick="removeBreak('${breakItem.id}')" title="Rimuovi pausa">
-                                🗑️
-                            </button>
+                        <div class="pause-inputs">
+                            <input type="time" id="${breakItem.id}_start" value="${breakItem.start}" 
+                                   onchange="updateBreak('${breakItem.id}', 'start', this.value)"
+                                   style="padding: 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 16px;">
+                            <span style="font-weight: bold; color: var(--text-secondary);">→</span>
+                            <input type="time" id="${breakItem.id}_end" value="${breakItem.end}"
+                                   onchange="updateBreak('${breakItem.id}', 'end', this.value)"
+                                   style="padding: 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 16px;">
                         </div>
                     </div>
                 `;
             });
             
             container.innerHTML = html;
-            document.getElementById('breaksSummary').style.display = 'block';
+            document.getElementById('breaksSummary').classList.remove('hidden');
             updateBreaksSummary();
         }
         
@@ -1291,13 +1296,6 @@
             const minutes = Math.round(totalMinutes % 60);
             
             document.getElementById('totalBreakTime').textContent = `${hours}h ${minutes.toString().padStart(2, '0')}m`;
-            
-            const summaryElement = document.getElementById('breaksSummary');
-            if (validBreaks > 0) {
-                summaryElement.style.borderLeft = '4px solid #28a745';
-            } else {
-                summaryElement.style.borderLeft = '4px solid #ffc107';
-            }
         }
         
         function validateBreaks() {
@@ -1377,29 +1375,17 @@
             return true;
         }
 
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-            event.target.classList.add('active');
-        }
-
         function addTravelType() {
             const name = document.getElementById('newTravelName').value.trim();
             const amount = parseFloat(document.getElementById('newTravelAmount').value);
             
             if (!name || isNaN(amount)) {
-                showMessage('Compila nome e importo per il tipo trasferta', 'error');
+                showMessage('Compila nome e importo', 'error');
                 return;
             }
             
             if (travelTypes.find(type => type.name.toLowerCase() === name.toLowerCase())) {
-                showMessage('Tipo trasferta già esistente', 'error');
+                showMessage('Tipo già esistente', 'error');
                 return;
             }
             
@@ -1411,16 +1397,16 @@
             document.getElementById('newTravelName').value = '';
             document.getElementById('newTravelAmount').value = '';
             
-            showMessage('Tipo trasferta aggiunto con successo', 'success');
+            showMessage('Tipo trasferta aggiunto', 'success');
         }
 
         function removeTravelType(index) {
-            if (confirm('Sei sicuro di voler eliminare questo tipo trasferta?')) {
+            if (confirm('Eliminare questo tipo trasferta?')) {
                 travelTypes.splice(index, 1);
                 updateTravelDropdown();
                 updateTravelList();
                 autoSaveConfig();
-                showMessage('Tipo trasferta eliminato', 'success');
+                showMessage('Tipo eliminato', 'success');
             }
         }
 
@@ -1440,230 +1426,26 @@
             const container = document.getElementById('travelList');
             container.innerHTML = '';
             
+            if (travelTypes.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-text">Nessun tipo trasferta</div></div>';
+                return;
+            }
+            
             travelTypes.forEach((type, index) => {
                 const item = document.createElement('div');
-                item.className = 'config-item';
+                item.className = 'list-item';
                 item.innerHTML = `
-                    <input type="text" value="${type.name}" onchange="updateTravelName(${index}, this.value)" style="flex: 2; font-size: 16px;">
-                    <input type="number" value="${type.amount}" onchange="updateTravelAmount(${index}, this.value)" style="flex: 1; font-size: 16px;" step="0.50">
-                    <span>€</span>
-                    <button class="btn btn-small btn-danger" onclick="removeTravelType(${index})">🗑️</button>
+                    <div class="list-item-content">
+                        <div class="list-item-title">${type.name}</div>
+                        <div class="list-item-subtitle">Importo fisso</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="list-item-value">€${type.amount}</div>
+                        <button class="btn btn-small btn-danger" onclick="removeTravelType(${index})">🗑️</button>
+                    </div>
                 `;
                 container.appendChild(item);
             });
-        }
-
-        function updateTravelName(index, newName) {
-            travelTypes[index].name = newName;
-            updateTravelDropdown();
-            autoSaveConfig();
-        }
-
-        function updateTravelAmount(index, newAmount) {
-            travelTypes[index].amount = parseFloat(newAmount) || 0;
-            updateTravelDropdown();
-            autoSaveConfig();
-        }
-
-        function exportToPDFFiltered() {
-            const filteredDays = getFilteredDaysByMonth();
-            
-            if (filteredDays.length === 0) {
-                showMessage('Non ci sono dati per il mese selezionato da esportare', 'error');
-                return;
-            }
-
-            try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({
-                    orientation: 'landscape',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-                
-                const pageWidth = doc.internal.pageSize.width;
-                const pageHeight = doc.internal.pageSize.height;
-                const margin = 20;
-                const currentMonth = getCurrentMonthName();
-                
-                doc.setFontSize(20);
-                doc.setTextColor(139, 0, 0);
-                doc.text(`REGISTRO ORARI - ${currentMonth.toUpperCase()}`, pageWidth / 2, 30, { align: 'center' });
-                
-                doc.setFontSize(12);
-                doc.setTextColor(100, 100, 100);
-                const today = new Date().toLocaleDateString('it-IT');
-                doc.text(`Generato il: ${today}`, pageWidth / 2, 40, { align: 'center' });
-                
-                const monthlyData = calculateMonthlyTotals(filteredDays);
-                
-                let yPos = 55;
-                doc.setFontSize(14);
-                doc.setTextColor(0, 0, 0);
-                doc.text(`RIEPILOGO ${currentMonth.toUpperCase()}`, margin, yPos);
-                
-                yPos += 10;
-                doc.setFontSize(10);
-                doc.setTextColor(50, 50, 50);
-                
-                const summaryData = [
-                    [`Ore Ordinarie Lavorate:`, formatHours(monthlyData.regularHours)],
-                    [`Ore Straordinari:`, formatHours(monthlyData.overtimeHours)],
-                    [`Ore Notturne:`, formatHours(monthlyData.nightHours)],
-                    [`Giorni Trasferta:`, monthlyData.travelDays.toString()],
-                    [`TOTALE COMPENSO:`, `€${monthlyData.monthlyTotal.toFixed(2)}`]
-                ];
-                
-                summaryData.forEach(([label, value], index) => {
-                    doc.text(label, margin, yPos + (index * 6));
-                    doc.setFont(undefined, 'bold');
-                    if (index === summaryData.length - 1) {
-                        doc.setTextColor(139, 0, 0);
-                        doc.setFontSize(12);
-                    }
-                    doc.text(value, margin + 60, yPos + (index * 6));
-                    doc.setFont(undefined, 'normal');
-                    doc.setTextColor(50, 50, 50);
-                    doc.setFontSize(10);
-                });
-                
-                yPos += 45;
-                
-                const tableData = filteredDays.map(day => [
-                    formatDate(day.date),
-                    day.entryTime,
-                    day.breakStart || '--',
-                    day.breakEnd || '--',
-                    day.exitTime,
-                    day.breakTime,
-                    formatHours(parseFloat(day.workHours)),
-                    formatHours(parseFloat(day.overtimeHours)),
-                    formatHours(parseFloat(day.nightHours || 0)),
-                    day.dayType?.substring(0, 15) || 'Feriale',
-                    day.travelType || '--',
-                    `€${day.dailyPay}`,
-                    (day.notes || '').substring(0, 20)
-                ]);
-                
-                const tableHeaders = [
-                    'Data', 'Entrata', 'Pausa', 'Rientro', 'Uscita', 
-                    'Pausa Tot.', 'Ore Lav.', 'Straord.', 'Notturne', 
-                    'Tipo Giorno', 'Trasferta', 'Compenso', 'Note'
-                ];
-                
-                doc.autoTable({
-                    head: [tableHeaders],
-                    body: tableData,
-                    startY: yPos,
-                    margin: { left: margin, right: margin },
-                    styles: {
-                        fontSize: 8,
-                        cellPadding: 2,
-                        halign: 'center'
-                    },
-                    headStyles: {
-                        fillColor: [139, 0, 0],
-                        textColor: [255, 255, 255],
-                        fontSize: 9,
-                        fontStyle: 'bold'
-                    },
-                    alternateRowStyles: {
-                        fillColor: [248, 249, 250]
-                    },
-                    columnStyles: {
-                        0: { cellWidth: 22 },
-                        1: { cellWidth: 18 },
-                        2: { cellWidth: 22 },
-                        3: { cellWidth: 20 },
-                        4: { cellWidth: 18 },
-                        5: { cellWidth: 22 },
-                        6: { cellWidth: 20 },
-                        7: { cellWidth: 18 },
-                        8: { cellWidth: 18 },
-                        9: { cellWidth: 32 },
-                        10: { cellWidth: 22 },
-                        11: { cellWidth: 22, fontStyle: 'bold' },
-                        12: { cellWidth: 30, fontSize: 8 }
-                    },
-                    didDrawPage: function(data) {
-                        doc.setFontSize(8);
-                        doc.setTextColor(150, 150, 150);
-                        doc.text(`Pagina ${data.pageNumber}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
-                        doc.text('Generato con Gestione Orari Lavorativi Pro v3.1 Mobile', margin, pageHeight - 10);
-                    }
-                });
-                
-                const fileName = `registro_${currentMonth.toLowerCase().replace(' ', '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
-                doc.save(fileName);
-                
-                showMessage(`PDF per ${currentMonth} generato con successo!`, 'success');
-                
-            } catch (error) {
-                console.error('Errore export PDF:', error);
-                showMessage('Errore nella generazione del PDF: ' + error.message, 'error');
-            }
-        }
-
-        function exportToExcelFiltered() {
-            const filteredDays = getFilteredDaysByMonth();
-            
-            if (filteredDays.length === 0) {
-                showMessage('Non ci sono dati per il mese selezionato da esportare', 'error');
-                return;
-            }
-
-            const currentMonth = getCurrentMonthName();
-            
-            const exportData = filteredDays.map(day => ({
-                'Data': formatDate(day.date),
-                'Entrata': day.entryTime,
-                'Pausa': day.breakStart || '--',
-                'Rientro': day.breakEnd || '--',
-                'Uscita': day.exitTime,
-                'Pausa Totale': day.breakTime,
-                'Ore Lavorate': formatHours(parseFloat(day.workHours)),
-                'Straordinari': formatHours(parseFloat(day.overtimeHours)),
-                'Ore Notturne': formatHours(parseFloat(day.nightHours || 0)),
-                'Tipo Giorno': day.dayType || 'Feriale',
-                'Tipo Trasferta': day.travelType || '--',
-                'Compenso (€)': day.dailyPay,
-                'Note': day.notes
-            }));
-
-            const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.json_to_sheet(exportData);
-            
-            const monthlyData = calculateMonthlyTotals(filteredDays);
-            
-            const summary = [
-                [`RIEPILOGO MENSILE - ${currentMonth.toUpperCase()}`],
-                [''],
-                ['Ore Ordinarie Lavorate:', formatHours(monthlyData.regularHours)],
-                ['Ore Straordinari:', formatHours(monthlyData.overtimeHours)],
-                ['Ore Notturne:', formatHours(monthlyData.nightHours)],
-                ['Giorni Trasferta:', monthlyData.travelDays.toString()],
-                ['Totale Mensile:', `€${monthlyData.monthlyTotal.toFixed(2)}`]
-            ];
-            
-            XLSX.utils.book_append_sheet(wb, ws, 'Orari Dettagliati');
-            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(summary), 'Riepilogo');
-
-            const fileName = `orari_${currentMonth.toLowerCase().replace(' ', '_')}_${new Date().toISOString().split('T')[0]}.xlsx`;
-            XLSX.writeFile(wb, fileName);
-            
-            showMessage(`File Excel per ${currentMonth} esportato con successo!`, 'success');
-        }
-
-        function clearAllData() {
-            if (confirm('Sei sicuro di voler cancellare tutti i dati? Questa operazione non può essere annullata.')) {
-                workDays = [];
-                updateTable();
-                populateMonthSelector();
-                updateSummary();
-                generateCalendar();
-                autoSaveWorkDays();
-                showMessage('Tutti i dati sono stati cancellati', 'success');
-            }
         }
 
         function addCalculationListeners() {
@@ -1688,18 +1470,18 @@
             if (entryTime && exitTime) {
                 const breakValidation = validateBreaks();
                 if (breakValidation !== true) {
-                    autoCalc.style.display = 'block';
+                    autoCalc.classList.remove('hidden');
                     document.getElementById('calcDayType').textContent = 'Errore';
                     document.getElementById('calcBreak').textContent = '--';
                     document.getElementById('calcWork').textContent = '--';
                     document.getElementById('calcNight').textContent = '--';
                     document.getElementById('calcOvertime').textContent = '--';
                     document.getElementById('calcPay').textContent = '--';
-                    document.getElementById('calcBreakdown').innerHTML = `<strong>❌ Errore:</strong> ${breakValidation}`;
+                    document.getElementById('calcBreakdown').innerHTML = `<strong style="color: #dc3545;">Errore:</strong> ${breakValidation}`;
                     return;
                 }
                 
-                autoCalc.style.display = 'block';
+                autoCalc.classList.remove('hidden');
                 
                 const result = calculateWorkHours(entryTime, exitTime);
                 
@@ -1711,10 +1493,10 @@
                 document.getElementById('calcPay').textContent = '€' + result.dailyPay;
                 
                 showDetailedBreakdown(result);
-            } else if (entryTime || exitTime || additionalBreaks.length > 0) {
-                autoCalc.style.display = 'block';
+            } else if (entryTime || exitTime) {
+                autoCalc.classList.remove('hidden');
                 
-                document.getElementById('calcDayType').textContent = entryTime ? 'In corso...' : 'Incompleto';
+                document.getElementById('calcDayType').textContent = entryTime ? 'In corso' : 'Incompleto';
                 document.getElementById('calcBreak').textContent = '--';
                 document.getElementById('calcWork').textContent = '--';
                 document.getElementById('calcNight').textContent = '--';
@@ -1722,13 +1504,12 @@
                 document.getElementById('calcPay').textContent = '--';
                 
                 const statusMsg = entryTime && !exitTime ? 
-                    'Giornata in corso - aggiungi l\'uscita per calcolare il totale' :
-                    'Compila entrata e uscita per il calcolo automatico';
+                    'Aggiungi orario uscita per calcolare' :
+                    'Compila entrata e uscita';
                     
-                document.getElementById('calcBreakdown').innerHTML = 
-                    `<strong>ℹ️ Stato:</strong> ${statusMsg}`;
+                document.getElementById('calcBreakdown').innerHTML = statusMsg;
             } else {
-                autoCalc.style.display = 'none';
+                autoCalc.classList.add('hidden');
             }
         }
 
@@ -1740,54 +1521,37 @@
             const nightHours = parseFloat(result.nightHours);
             const standardHours = parseFloat(document.getElementById('standardHours').value) || 8;
             
-            let breakdown = '<strong>📋 Breakdown Calcolo Preciso:</strong><br>';
+            let breakdown = '';
             
             if (dayOfWeek === 0) {
-                breakdown += `🎯 Domenica: ${formatHours(workHours)} × €${hourlyRate} × 1.45 = €${(workHours * hourlyRate * 1.45).toFixed(2)}<br>`;
-                breakdown += `ℹ️ Tutte le ore domenicali sono maggiorate del +45%`;
+                breakdown += `Domenica: ${formatHours(workHours)} × €${hourlyRate} × 1.45 = €${(workHours * hourlyRate * 1.45).toFixed(2)}`;
             } else if (dayOfWeek === 6) {
                 const firstThree = Math.min(workHours, 3);
                 const remaining = Math.max(0, workHours - 3);
                 
-                breakdown += `🎯 Sabato prime 3h: ${formatHours(firstThree)} × €${hourlyRate} × 1.25 = €${(firstThree * hourlyRate * 1.25).toFixed(2)}<br>`;
+                breakdown += `Sab 1-3h: ${formatHours(firstThree)} × €${hourlyRate} × 1.25 = €${(firstThree * hourlyRate * 1.25).toFixed(2)}`;
                 if (remaining > 0) {
-                    breakdown += `🎯 Sabato oltre 3h: ${formatHours(remaining)} × €${hourlyRate} × 1.50 = €${(remaining * hourlyRate * 1.50).toFixed(2)}<br>`;
+                    breakdown += `<br>Sab oltre 3h: ${formatHours(remaining)} × €${hourlyRate} × 1.50 = €${(remaining * hourlyRate * 1.50).toFixed(2)}`;
                 }
             } else {
                 const regularHours = Math.min(workHours, standardHours);
                 const overtimeHours = Math.max(0, workHours - standardHours);
                 
-                breakdown += `☀️ Ore normali: ${formatHours(regularHours)} × €${hourlyRate} = €${(regularHours * hourlyRate).toFixed(2)}<br>`;
+                breakdown += `Normali: ${formatHours(regularHours)} × €${hourlyRate} = €${(regularHours * hourlyRate).toFixed(2)}`;
                 
                 if (overtimeHours > 0) {
-                    breakdown += `⚡ Straordinari: ${formatHours(overtimeHours)} × €${hourlyRate} × 1.25 = €${(overtimeHours * hourlyRate * 1.25).toFixed(2)}<br>`;
+                    breakdown += `<br>Straord: ${formatHours(overtimeHours)} × €${hourlyRate} × 1.25 = €${(overtimeHours * hourlyRate * 1.25).toFixed(2)}`;
                 }
                 
                 if (nightHours > 0) {
-                    breakdown += `🌙 Notturno: ${formatHours(nightHours)} × maggiorazione +15%/+55%<br>`;
-                }
-            }
-            
-            const breakStart = document.getElementById('breakStart').value;
-            const breakEnd = document.getElementById('breakEnd').value;
-            if (breakStart && breakEnd) {
-                breakdown += `<br><strong>⏸️ Pausa principale:</strong> ${breakStart} → ${breakEnd}<br>`;
-            }
-            
-            if (additionalBreaks.length > 0) {
-                const validBreaks = additionalBreaks.filter(br => br.start && br.end);
-                if (validBreaks.length > 0) {
-                    breakdown += `<strong>⏸️ Pause aggiuntive (${validBreaks.length}):</strong><br>`;
-                    validBreaks.forEach((br, index) => {
-                        breakdown += `• Pausa ${index + 2}: ${br.start} → ${br.end}<br>`;
-                    });
+                    breakdown += `<br>Notturno: ${formatHours(nightHours)} con maggiorazioni`;
                 }
             }
             
             const travelTypeIndex = document.getElementById('travelType').value;
             if (travelTypeIndex !== '') {
                 const travelAmount = travelTypes[travelTypeIndex].amount;
-                breakdown += `<br>✈️ Trasferta: +€${travelAmount}`;
+                breakdown += `<br>Trasferta: +€${travelAmount}`;
             }
             
             document.getElementById('calcBreakdown').innerHTML = breakdown;
@@ -1837,51 +1601,12 @@
             
             if (!isCurrentMonth) dayElement.classList.add('other-month');
             if (isToday) dayElement.classList.add('today');
-            if (isWeekend) dayElement.classList.add('weekend');
             if (workData) dayElement.classList.add('has-work');
             
-            let dayContent = `<div class="calendar-day-number">${dayNumber}</div>`;
-            
-            if (workData && isCurrentMonth) {
-                let statusIndicator = '';
-                let statusColor = '#198754';
-                
-                if (workData.status === 'in_corso') {
-                    statusIndicator = '⏳';
-                    statusColor = '#ffc107';
-                } else if (workData.status === 'incompleto') {
-                    statusIndicator = '❌';
-                    statusColor = '#dc3545';
-                } else {
-                    statusIndicator = '✅';
-                }
-                
-                if (workData.status === 'completo') {
-                    dayContent += `
-                        <div class="calendar-day-info">
-                            <div class="calendar-day-hours">${formatHours(parseFloat(workData.workHours))}</div>
-                            <div class="calendar-day-pay">€${workData.dailyPay}</div>
-                            ${workData.travelType ? `<div style="color: #ff9800;">✈️ ${workData.travelType}</div>` : ''}
-                        </div>
-                    `;
-                } else {
-                    dayContent += `
-                        <div class="calendar-day-info">
-                            <div style="color: ${statusColor}; font-weight: bold; font-size: 12px;">
-                                ${statusIndicator} ${workData.status === 'in_corso' ? 'In corso' : 'Incompleto'}
-                            </div>
-                            ${workData.entryTime ? `<div style="font-size: 10px;">Da: ${workData.entryTime}</div>` : ''}
-                            ${workData.exitTime ? `<div style="font-size: 10px;">A: ${workData.exitTime}</div>` : ''}
-                        </div>
-                    `;
-                }
-            }
-            
-            if (!workData && isCurrentMonth) {
-                dayContent += '<button class="calendar-quick-add" onclick="quickAddDay(\'' + dateString + '\')">+</button>';
-            }
-            
-            dayElement.innerHTML = dayContent;
+            dayElement.innerHTML = `
+                <div class="calendar-day-number">${dayNumber}</div>
+                ${workData && workData.status === 'completo' ? '<div class="calendar-day-indicator"></div>' : ''}
+            `;
             
             dayElement.addEventListener('click', () => selectCalendarDay(date, dayElement));
             
@@ -1912,121 +1637,68 @@
             const detailsSection = document.getElementById('dayDetails');
             const detailsContent = document.getElementById('dayDetailsContent');
             
-            let content = `<h3>${dayNames[date.getDay()]} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}</h3>`;
+            let content = `<div class="card-header"><div class="card-title">${dayNames[date.getDay()]} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}</div></div>`;
             
             if (workData) {
                 if (workData.status === 'completo') {
                     content += `
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
-                            <div class="summary-card" style="background: #4CAF50;">
-                                <h4>✅ Completo</h4>
-                                <div style="font-size: 1.2em;">Ore: ${formatHours(parseFloat(workData.workHours))}</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                            <div style="background: #d1f4e0; padding: 16px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 12px; color: #0f5132; margin-bottom: 4px;">Ore Lavorate</div>
+                                <div style="font-size: 24px; font-weight: 700; color: #0f5132;">${formatHours(parseFloat(workData.workHours))}</div>
                             </div>
-                            <div class="summary-card" style="background: #2196f3;">
-                                <h4>Compenso</h4>
-                                <div style="font-size: 1.5em;">€${workData.dailyPay}</div>
-                            </div>
-                            <div class="summary-card" style="background: #ff9800;">
-                                <h4>Tipo Giorno</h4>
-                                <div style="font-size: 1em;">${workData.dayType || 'Feriale'}</div>
+                            <div style="background: #fff3cd; padding: 16px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 12px; color: #856404; margin-bottom: 4px;">Compenso</div>
+                                <div style="font-size: 24px; font-weight: 700; color: #856404;">€${workData.dailyPay}</div>
                             </div>
                         </div>
-                        
-                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                            <h4>📋 Dettagli Orari</h4>
-                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-size: 14px;">
-                                <div><strong>Entrata:</strong> ${workData.entryTime}</div>
-                                <div><strong>Pausa:</strong> ${workData.breakStart || '--'}</div>
-                                <div><strong>Rientro:</strong> ${workData.breakEnd || '--'}</div>
-                                <div><strong>Uscita:</strong> ${workData.exitTime}</div>
-                            </div>
-                            <div style="margin-top: 10px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 14px;">
-                                <div><strong>Straordinari:</strong> ${formatHours(parseFloat(workData.overtimeHours))}</div>
-                                <div><strong>Ore Notturne:</strong> ${formatHours(parseFloat(workData.nightHours || 0))}</div>
-                            </div>
-                            ${(() => {
-                                let pausesInfo = '';
-                                if (workData.additionalBreaks && Array.isArray(workData.additionalBreaks)) {
-                                    const validBreaks = workData.additionalBreaks.filter(br => br.start && br.end);
-                                    if (validBreaks.length > 0) {
-                                        pausesInfo = '<div style="margin-top: 10px;"><strong>Pause aggiuntive:</strong> ' + 
-                                            validBreaks.map((br, idx) => `${idx + 2}) ${br.start} → ${br.end}`).join(', ') + '</div>';
-                                    }
-                                }
-                                return pausesInfo;
-                            })()}
-                            ${workData.notes ? `<div style="margin-top: 10px;"><strong>Note:</strong> ${workData.notes}</div>` : ''}
+                        <div style="font-size: 14px; line-height: 2;">
+                            <div><strong>Entrata:</strong> ${workData.entryTime}</div>
+                            <div><strong>Pausa:</strong> ${workData.breakStart || '--'} - ${workData.breakEnd || '--'}</div>
+                            <div><strong>Uscita:</strong> ${workData.exitTime}</div>
+                            <div><strong>Straordinari:</strong> ${formatHours(parseFloat(workData.overtimeHours))}</div>
+                            <div><strong>Notturne:</strong> ${formatHours(parseFloat(workData.nightHours || 0))}</div>
+                            <div><strong>Tipo:</strong> ${workData.dayType || 'Feriale'}</div>
+                            ${workData.notes ? `<div><strong>Note:</strong> ${workData.notes}</div>` : ''}
                         </div>
                     `;
                 } else {
-                    const statusColor = workData.status === 'in_corso' ? '#ffc107' : '#dc3545';
-                    const statusText = workData.status === 'in_corso' ? 'In Corso' : 'Incompleto';
-                    const statusIcon = workData.status === 'in_corso' ? '⏳' : '❌';
-                    
                     content += `
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
-                            <div class="summary-card" style="background: ${statusColor};">
-                                <h4>${statusIcon} ${statusText}</h4>
-                                <div style="font-size: 1em;">Da completare</div>
+                        <div style="background: #f8d7da; padding: 16px; border-radius: 12px; text-align: center; margin-bottom: 16px;">
+                            <div style="font-size: 16px; font-weight: 600; color: #842029;">
+                                ${workData.status === 'in_corso' ? '⏳ In Corso' : '❌ Incompleto'}
                             </div>
                         </div>
-                        
-                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                            <h4>📋 Dati Parziali</h4>
-                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-size: 14px;">
-                                <div><strong>Entrata:</strong> ${workData.entryTime || '--'}</div>
-                                <div><strong>Pausa:</strong> ${workData.breakStart || '--'}</div>
-                                <div><strong>Rientro:</strong> ${workData.breakEnd || '--'}</div>
-                                <div><strong>Uscita:</strong> ${workData.exitTime || '--'}</div>
-                            </div>
-                            <div style="margin-top: 10px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 14px;">
-                                <div><strong>Trasferta:</strong> ${workData.travelType || '--'}</div>
-                            </div>
-                            ${workData.notes ? `<div style="margin-top: 10px;"><strong>Note:</strong> ${workData.notes}</div>` : ''}
-                        </div>
-                        
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid ${statusColor};">
-                            <p style="margin: 0; color: #495057;">
-                                <strong>💡 Suggerimento:</strong> 
-                                ${workData.status === 'in_corso' ? 
-                                    'Aggiungi l\'ora di uscita per completare la giornata e calcolare il compenso.' :
-                                    'Aggiungi almeno entrata e uscita per calcolare automaticamente ore e compenso.'
-                                }
-                            </p>
+                        <div style="font-size: 14px; line-height: 2;">
+                            <div><strong>Entrata:</strong> ${workData.entryTime || '--'}</div>
+                            <div><strong>Uscita:</strong> ${workData.exitTime || '--'}</div>
                         </div>
                     `;
                 }
                 
                 content += `
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button class="btn btn-info" onclick="editDay('${dateString}')" style="flex: 1; min-width: 150px;">✏️ ${workData.status === 'completo' ? 'Modifica' : 'Completa'}</button>
-                        <button class="btn btn-danger" onclick="deleteDay('${dateString}')" style="flex: 1; min-width: 150px;">🗑️ Elimina</button>
+                    <div class="btn-group" style="margin-top: 16px;">
+                        <button class="btn btn-primary" onclick="editDay('${dateString}')">✏️ Modifica</button>
+                        <button class="btn btn-danger" onclick="deleteDay('${dateString}')">🗑️ Elimina</button>
                     </div>
                 `;
             } else {
                 content += `
-                    <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
-                        <p style="color: #666; margin-bottom: 15px;">Nessuna giornata lavorativa registrata per questa data.</p>
-                        <button class="btn btn-success" onclick="addDayFromCalendar('${dateString}')">➕ Aggiungi Giornata</button>
+                    <div class="empty-state">
+                        <div class="empty-state-text">Nessun dato per questa giornata</div>
                     </div>
+                    <button class="btn btn-success" onclick="addDayFromCalendar('${dateString}')" style="margin-top: 16px;">+ Aggiungi Giornata</button>
                 `;
             }
             
             detailsContent.innerHTML = content;
-            detailsSection.style.display = 'block';
-        }
-
-        function quickAddDay(dateString) {
-            document.getElementById('workDate').value = dateString;
-            showTab('inserimento');
-            
-            setTimeout(() => {
-                document.getElementById('entryTime').focus();
-            }, 100);
+            detailsSection.classList.remove('hidden');
         }
 
         function addDayFromCalendar(dateString) {
-            quickAddDay(dateString);
+            document.getElementById('workDate').value = dateString;
+            showTab('inserimento');
+            setTimeout(() => document.getElementById('entryTime').focus(), 100);
         }
 
         function editDay(dateString) {
@@ -2061,19 +1733,24 @@
                 document.getElementById('travelType').value = travelIndex >= 0 ? travelIndex : '';
                 
                 showTab('inserimento');
-                
                 calculateAutomatic();
-                
-                showMessage('Dati caricati per modifica - clicca "Aggiungi Giornata" per salvare le modifiche', 'success');
+                showMessage('Dati caricati per modifica', 'success');
             }
         }
 
         function deleteDay(dateString) {
-            const index = workDays.findIndex(day => day.date === dateString);
-            if (index >= 0) {
-                removeWorkDay(index);
-                generateCalendar();
-                document.getElementById('dayDetails').style.display = 'none';
+            if (confirm('Eliminare questa giornata?')) {
+                const index = workDays.findIndex(day => day.date === dateString);
+                if (index >= 0) {
+                    workDays.splice(index, 1);
+                    updateWorkDaysList();
+                    populateMonthSelector();
+                    updateSummary();
+                    generateCalendar();
+                    autoSaveWorkDays();
+                    document.getElementById('dayDetails').classList.add('hidden');
+                    showMessage('Giornata eliminata', 'success');
+                }
             }
         }
 
@@ -2132,11 +1809,7 @@
                 
                 let pauseDescription = `${hours}h ${minutes}m`;
                 if (breakStart && breakEnd && validAdditionalBreaks > 0) {
-                    pauseDescription += ` (principale + ${validAdditionalBreaks} aggiuntive)`;
-                } else if (breakStart && breakEnd) {
-                    pauseDescription += ' (principale)';
-                } else if (validAdditionalBreaks > 0) {
-                    pauseDescription += ` (${validAdditionalBreaks} aggiuntive)`;
+                    pauseDescription += ` (principale + ${validAdditionalBreaks} extra)`;
                 }
                 
                 breakTime = pauseDescription;
@@ -2295,9 +1968,9 @@
                 
                 if (totalNightHours > 0) {
                     if (overtimeNightHours > 0) {
-                        dayType += ` + Notturno (+15%/+55%)`;
+                        dayType += ` + Nott. (+15%/+55%)`;
                     } else {
-                        dayType += ` + Notturno (+15%)`;
+                        dayType += ` + Nott. (+15%)`;
                     }
                 }
             }
@@ -2340,7 +2013,7 @@
 
             const existingIndex = workDays.findIndex(day => day.date === date);
             if (existingIndex !== -1) {
-                if (!confirm('Esiste già un record per questa data. Vuoi sostituirlo?')) {
+                if (!confirm('Esiste già un record per questa data. Sostituirlo?')) {
                     return;
                 }
                 workDays.splice(existingIndex, 1);
@@ -2386,7 +2059,7 @@
             workDays.push(workDay);
             workDays.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            updateTable();
+            updateWorkDaysList();
             populateMonthSelector();
             updateSummary();
             generateCalendar();
@@ -2395,19 +2068,7 @@
             
             const statusText = workDay.status === 'completo' ? 'completa' : 
                               workDay.status === 'in_corso' ? 'in corso' : 'incompleta';
-            showMessage(`Giornata ${statusText} salvata con successo!`, 'success');
-        }
-
-        function removeWorkDay(index) {
-            if (confirm('Sei sicuro di voler eliminare questa giornata?')) {
-                workDays.splice(index, 1);
-                updateTable();
-                populateMonthSelector();
-                updateSummary();
-                generateCalendar();
-                autoSaveWorkDays();
-                showMessage('Giornata eliminata', 'success');
-            }
+            showMessage(`Giornata ${statusText} salvata!`, 'success');
         }
 
         function clearForm() {
@@ -2417,7 +2078,7 @@
             document.getElementById('exitTime').value = '';
             document.getElementById('travelType').value = '';
             document.getElementById('notes').value = '';
-            document.getElementById('autoCalc').style.display = 'none';
+            document.getElementById('autoCalc').classList.add('hidden');
             
             additionalBreaks = [];
             breakCounter = 0;
@@ -2428,56 +2089,80 @@
             document.getElementById('workDate').value = currentDate.toISOString().split('T')[0];
         }
 
-        function updateTable() {
-            const tbody = document.getElementById('timesheet-body');
-            tbody.innerHTML = '';
-
-            workDays.forEach((day, index) => {
-                const row = tbody.insertRow();
+        function updateWorkDaysList() {
+            const container = document.getElementById('workDaysList');
+            const emptyState = document.getElementById('emptyRegistry');
+            const countBadge = document.getElementById('totalDaysCount');
+            
+            if (workDays.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                countBadge.textContent = '0';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            countBadge.textContent = workDays.length;
+            
+            container.innerHTML = '';
+            
+            // Raggruppa per mese
+            const byMonth = {};
+            workDays.forEach(day => {
+                const date = new Date(day.date);
+                const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+                if (!byMonth[monthKey]) byMonth[monthKey] = [];
+                byMonth[monthKey].push(day);
+            });
+            
+            // Ordina mesi (più recenti prima)
+            const sortedMonths = Object.keys(byMonth).sort().reverse();
+            
+            sortedMonths.forEach(monthKey => {
+                const [year, month] = monthKey.split('-');
+                const monthName = new Date(parseInt(year), parseInt(month) - 1, 1)
+                    .toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
                 
-                let rowClass = '';
-                let statusIcon = '';
+                const monthHeader = document.createElement('div');
+                monthHeader.style.cssText = 'padding: 16px 16px 8px 16px; font-weight: 700; color: var(--text-secondary); font-size: 14px; text-transform: uppercase;';
+                monthHeader.textContent = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+                container.appendChild(monthHeader);
                 
-                if (day.status === 'in_corso') {
-                    rowClass = 'style="background-color: #fff3cd; opacity: 0.8;"';
-                    statusIcon = '⏳';
-                } else if (day.status === 'incompleto') {
-                    rowClass = 'style="background-color: #f8d7da; opacity: 0.7;"';
-                    statusIcon = '❌';
-                } else {
-                    statusIcon = '✅';
-                }
-                
-                let additionalBreaksDisplay = '--';
-                if (day.additionalBreaks && Array.isArray(day.additionalBreaks)) {
-                    const validBreaks = day.additionalBreaks.filter(br => br.start && br.end);
-                    if (validBreaks.length > 0) {
-                        additionalBreaksDisplay = validBreaks.map((br, idx) => 
-                            `${br.start}-${br.end}`
-                        ).join(', ');
-                        if (validBreaks.length > 1) {
-                            additionalBreaksDisplay = `${validBreaks.length}: ${additionalBreaksDisplay}`;
-                        }
+                byMonth[monthKey].reverse().forEach((day, index) => {
+                    const dayItem = document.createElement('div');
+                    dayItem.className = 'list-item';
+                    
+                    let badge = '';
+                    if (day.status === 'completo') {
+                        badge = '<span class="badge badge-success">✓ Completo</span>';
+                    } else if (day.status === 'in_corso') {
+                        badge = '<span class="badge badge-warning">⏳ In corso</span>';
+                    } else {
+                        badge = '<span class="badge badge-danger">❌ Incompleto</span>';
                     }
-                }
-                
-                row.innerHTML = `
-                    <td ${rowClass}>${statusIcon} ${formatDate(day.date)}</td>
-                    <td ${rowClass}>${day.entryTime || '--'}</td>
-                    <td ${rowClass}>${day.breakStart || '--'}</td>
-                    <td ${rowClass}>${day.breakEnd || '--'}</td>
-                    <td ${rowClass}>${day.exitTime || '--'}</td>
-                    <td ${rowClass} style="font-size: 12px; max-width: 100px; word-wrap: break-word;">${additionalBreaksDisplay}</td>
-                    <td ${rowClass}>${day.breakTime}</td>
-                    <td ${rowClass}>${day.status === 'completo' ? formatHours(parseFloat(day.workHours)) : '--'}</td>
-                    <td ${rowClass}>${day.status === 'completo' ? formatHours(parseFloat(day.overtimeHours)) : '--'}</td>
-                    <td ${rowClass}>${day.status === 'completo' ? formatHours(parseFloat(day.nightHours || 0)) : '--'}</td>
-                    <td ${rowClass}><span style="font-size:12px; background:#e3f2fd; padding:2px 6px; border-radius:3px;">${day.dayType || '--'}</span></td>
-                    <td ${rowClass}>${day.travelType || '--'}</td>
-                    <td ${rowClass}><strong>${day.status === 'completo' ? '€' + day.dailyPay : '--'}</strong></td>
-                    <td ${rowClass}>${day.notes}</td>
-                    <td ${rowClass}><button class="btn btn-small btn-danger" onclick="removeWorkDay(${index})">🗑️</button></td>
-                `;
+                    
+                    dayItem.innerHTML = `
+                        <div class="list-item-content">
+                            <div class="list-item-title">${formatDate(day.date)} ${badge}</div>
+                            <div class="list-item-subtitle">
+                                ${day.entryTime || '--'} → ${day.exitTime || '--'} 
+                                ${day.status === 'completo' ? `• ${formatHours(parseFloat(day.workHours))}` : ''}
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            ${day.status === 'completo' ? `<div class="list-item-value">€${day.dailyPay}</div>` : ''}
+                            <button class="btn btn-small btn-danger" onclick="deleteDay('${day.date}')">🗑️</button>
+                        </div>
+                    `;
+                    
+                    dayItem.addEventListener('click', (e) => {
+                        if (!e.target.closest('button')) {
+                            editDay(day.date);
+                        }
+                    });
+                    
+                    container.appendChild(dayItem);
+                });
             });
         }
 
@@ -2485,7 +2170,7 @@
             const selector = document.getElementById('monthSelector');
             
             if (workDays.length === 0) {
-                selector.innerHTML = '<option value="">Nessun dato disponibile</option>';
+                selector.innerHTML = '<option value="">Nessun dato</option>';
                 return;
             }
             
@@ -2588,7 +2273,7 @@
             
             const currentMonth = getCurrentMonthName();
             document.getElementById('breakdownSubtitle').textContent = 
-                `Analisi completa di tutti i compensi aggiuntivi di ${currentMonth}`;
+                `Analisi compensi ${currentMonth}`;
             
             updateOvertimeBreakdown(completeDays);
         }
@@ -2705,42 +2390,39 @@
 
         function populateBreakdownDisplay(breakdown, hourlyRate) {
             document.getElementById('weekdayBreakdown').textContent = 
-                `${formatHours(breakdown.weekdayOvertime)} × €${hourlyRate.toFixed(2)} × 1.25 = €${breakdown.amounts.weekday.toFixed(2)}`;
+                `${formatHours(breakdown.weekdayOvertime)} × €${hourlyRate.toFixed(2)} × 1.25`;
             document.getElementById('weekdayAmount').textContent = `€${breakdown.amounts.weekday.toFixed(2)}`;
             
             document.getElementById('saturdayFirstBreakdown').textContent = 
-                `${formatHours(breakdown.saturdayFirst3)} × €${hourlyRate.toFixed(2)} × 1.25 = €${breakdown.amounts.saturdayFirst.toFixed(2)}`;
+                `${formatHours(breakdown.saturdayFirst3)} × €${hourlyRate.toFixed(2)} × 1.25`;
             document.getElementById('saturdayFirstAmount').textContent = `€${breakdown.amounts.saturdayFirst.toFixed(2)}`;
             
             document.getElementById('saturdayRestBreakdown').textContent = 
-                `${formatHours(breakdown.saturdayRest)} × €${hourlyRate.toFixed(2)} × 1.50 = €${breakdown.amounts.saturdayRest.toFixed(2)}`;
+                `${formatHours(breakdown.saturdayRest)} × €${hourlyRate.toFixed(2)} × 1.50`;
             document.getElementById('saturdayRestAmount').textContent = `€${breakdown.amounts.saturdayRest.toFixed(2)}`;
             
             document.getElementById('sundayBreakdown').textContent = 
-                `${formatHours(breakdown.sundayAll)} × €${hourlyRate.toFixed(2)} × 1.45 = €${breakdown.amounts.sunday.toFixed(2)}`;
+                `${formatHours(breakdown.sundayAll)} × €${hourlyRate.toFixed(2)} × 1.45`;
             document.getElementById('sundayAmount').textContent = `€${breakdown.amounts.sunday.toFixed(2)}`;
             
-            const overtimeSubtotal = breakdown.amounts.weekday + breakdown.amounts.saturdayFirst + 
-                                   breakdown.amounts.saturdayRest + breakdown.amounts.sunday;
-            document.getElementById('overtimeSubtotal').textContent = `€${overtimeSubtotal.toFixed(2)}`;
-            
             document.getElementById('nightNormalBreakdown').textContent = 
-                `${formatHours(breakdown.nightNormal)} × €${hourlyRate.toFixed(2)} × 0.15 = €${breakdown.amounts.nightNormal.toFixed(2)}`;
+                `${formatHours(breakdown.nightNormal)} × €${hourlyRate.toFixed(2)} × 0.15`;
             document.getElementById('nightNormalAmount').textContent = `€${breakdown.amounts.nightNormal.toFixed(2)}`;
             
             document.getElementById('nightOvertimeBreakdown').textContent = 
-                `${formatHours(breakdown.nightOvertime)} × €${hourlyRate.toFixed(2)} × 0.55 = €${breakdown.amounts.nightOvertime.toFixed(2)}`;
+                `${formatHours(breakdown.nightOvertime)} × €${hourlyRate.toFixed(2)} × 0.55`;
             document.getElementById('nightOvertimeAmount').textContent = `€${breakdown.amounts.nightOvertime.toFixed(2)}`;
             
             document.getElementById('travelBreakdown').textContent = 
-                `${breakdown.travelDays} giorni × €${(breakdown.travelAmount / Math.max(breakdown.travelDays, 1)).toFixed(2)} = €${breakdown.travelAmount.toFixed(2)}`;
+                `${breakdown.travelDays} giorni × €${(breakdown.travelAmount / Math.max(breakdown.travelDays, 1)).toFixed(2)}`;
             document.getElementById('travelAmount').textContent = `€${breakdown.amounts.travel.toFixed(2)}`;
             
+            const overtimeSubtotal = breakdown.amounts.weekday + breakdown.amounts.saturdayFirst + 
+                                   breakdown.amounts.saturdayRest + breakdown.amounts.sunday;
+            
             const bonusSubtotal = breakdown.amounts.nightNormal + breakdown.amounts.nightOvertime + breakdown.amounts.travel;
-            document.getElementById('bonusSubtotal').textContent = `€${bonusSubtotal.toFixed(2)}`;
             
             const totalBonuses = overtimeSubtotal + bonusSubtotal;
-            document.getElementById('totalBonuses').textContent = `€${totalBonuses.toFixed(2)}`;
             document.getElementById('totalBonusesDisplay').textContent = `€${totalBonuses.toFixed(2)}`;
             
             const completeDays = workDays.filter(day => day.status === 'completo');
@@ -2776,6 +2458,207 @@
             };
         }
 
+        function exportToExcelFiltered() {
+            const filteredDays = getFilteredDaysByMonth();
+            
+            if (filteredDays.length === 0) {
+                showMessage('Nessun dato da esportare', 'error');
+                return;
+            }
+
+            const currentMonth = getCurrentMonthName();
+            
+            const exportData = filteredDays.map(day => ({
+                'Data': formatDate(day.date),
+                'Entrata': day.entryTime,
+                'Pausa': day.breakStart || '--',
+                'Rientro': day.breakEnd || '--',
+                'Uscita': day.exitTime,
+                'Pausa Totale': day.breakTime,
+                'Ore Lavorate': formatHours(parseFloat(day.workHours)),
+                'Straordinari': formatHours(parseFloat(day.overtimeHours)),
+                'Ore Notturne': formatHours(parseFloat(day.nightHours || 0)),
+                'Tipo Giorno': day.dayType || 'Feriale',
+                'Tipo Trasferta': day.travelType || '--',
+                'Compenso (€)': day.dailyPay,
+                'Note': day.notes
+            }));
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            
+            const monthlyData = calculateMonthlyTotals(filteredDays);
+            
+            const summary = [
+                [`RIEPILOGO - ${currentMonth.toUpperCase()}`],
+                [''],
+                ['Ore Ordinarie:', formatHours(monthlyData.regularHours)],
+                ['Ore Straordinari:', formatHours(monthlyData.overtimeHours)],
+                ['Ore Notturne:', formatHours(monthlyData.nightHours)],
+                ['Giorni Trasferta:', monthlyData.travelDays.toString()],
+                ['Totale:', `€${monthlyData.monthlyTotal.toFixed(2)}`]
+            ];
+            
+            XLSX.utils.book_append_sheet(wb, ws, 'Dettagli');
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(summary), 'Riepilogo');
+
+            const fileName = `orari_${currentMonth.toLowerCase().replace(' ', '_')}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            
+            showMessage('Excel esportato!', 'success');
+        }
+
+        function exportToPDFFiltered() {
+            const filteredDays = getFilteredDaysByMonth();
+            
+            if (filteredDays.length === 0) {
+                showMessage('Nessun dato da esportare', 'error');
+                return;
+            }
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+                
+                const pageWidth = doc.internal.pageSize.width;
+                const pageHeight = doc.internal.pageSize.height;
+                const margin = 20;
+                const currentMonth = getCurrentMonthName();
+                
+                doc.setFontSize(20);
+                doc.setTextColor(139, 0, 0);
+                doc.text(`REGISTRO - ${currentMonth.toUpperCase()}`, pageWidth / 2, 30, { align: 'center' });
+                
+                doc.setFontSize(12);
+                doc.setTextColor(100, 100, 100);
+                const today = new Date().toLocaleDateString('it-IT');
+                doc.text(`Generato: ${today}`, pageWidth / 2, 40, { align: 'center' });
+                
+                const monthlyData = calculateMonthlyTotals(filteredDays);
+                
+                let yPos = 55;
+                doc.setFontSize(14);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`RIEPILOGO ${currentMonth.toUpperCase()}`, margin, yPos);
+                
+                yPos += 10;
+                doc.setFontSize(10);
+                doc.setTextColor(50, 50, 50);
+                
+                const summaryData = [
+                    [`Ore Ordinarie:`, formatHours(monthlyData.regularHours)],
+                    [`Ore Straordinari:`, formatHours(monthlyData.overtimeHours)],
+                    [`Ore Notturne:`, formatHours(monthlyData.nightHours)],
+                    [`Giorni Trasferta:`, monthlyData.travelDays.toString()],
+                    [`TOTALE:`, `€${monthlyData.monthlyTotal.toFixed(2)}`]
+                ];
+                
+                summaryData.forEach(([label, value], index) => {
+                    doc.text(label, margin, yPos + (index * 6));
+                    doc.setFont(undefined, 'bold');
+                    if (index === summaryData.length - 1) {
+                        doc.setTextColor(139, 0, 0);
+                        doc.setFontSize(12);
+                    }
+                    doc.text(value, margin + 60, yPos + (index * 6));
+                    doc.setFont(undefined, 'normal');
+                    doc.setTextColor(50, 50, 50);
+                    doc.setFontSize(10);
+                });
+                
+                yPos += 45;
+                
+                const tableData = filteredDays.map(day => [
+                    formatDate(day.date),
+                    day.entryTime,
+                    day.breakStart || '--',
+                    day.breakEnd || '--',
+                    day.exitTime,
+                    day.breakTime,
+                    formatHours(parseFloat(day.workHours)),
+                    formatHours(parseFloat(day.overtimeHours)),
+                    formatHours(parseFloat(day.nightHours || 0)),
+                    day.dayType?.substring(0, 15) || 'Feriale',
+                    day.travelType || '--',
+                    `€${day.dailyPay}`,
+                    (day.notes || '').substring(0, 20)
+                ]);
+                
+                const tableHeaders = [
+                    'Data', 'Entrata', 'Pausa', 'Rientro', 'Uscita', 
+                    'Pausa Tot.', 'Ore Lav.', 'Straord.', 'Notturne', 
+                    'Tipo', 'Trasferta', 'Compenso', 'Note'
+                ];
+                
+                doc.autoTable({
+                    head: [tableHeaders],
+                    body: tableData,
+                    startY: yPos,
+                    margin: { left: margin, right: margin },
+                    styles: {
+                        fontSize: 8,
+                        cellPadding: 2,
+                        halign: 'center'
+                    },
+                    headStyles: {
+                        fillColor: [139, 0, 0],
+                        textColor: [255, 255, 255],
+                        fontSize: 9,
+                        fontStyle: 'bold'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [248, 249, 250]
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 22 },
+                        1: { cellWidth: 18 },
+                        2: { cellWidth: 18 },
+                        3: { cellWidth: 18 },
+                        4: { cellWidth: 18 },
+                        5: { cellWidth: 20 },
+                        6: { cellWidth: 18 },
+                        7: { cellWidth: 18 },
+                        8: { cellWidth: 18 },
+                        9: { cellWidth: 25 },
+                        10: { cellWidth: 20 },
+                        11: { cellWidth: 22, fontStyle: 'bold' },
+                        12: { cellWidth: 25, fontSize: 7 }
+                    },
+                    didDrawPage: function(data) {
+                        doc.setFontSize(8);
+                        doc.setTextColor(150, 150, 150);
+                        doc.text(`Pag. ${data.pageNumber}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
+                        doc.text('Orari Lavoro Pro v4.0', margin, pageHeight - 10);
+                    }
+                });
+                
+                const fileName = `registro_${currentMonth.toLowerCase().replace(' ', '_')}.pdf`;
+                doc.save(fileName);
+                
+                showMessage('PDF generato!', 'success');
+                
+            } catch (error) {
+                console.error('Errore PDF:', error);
+                showMessage('Errore generazione PDF', 'error');
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('Cancellare TUTTI i dati? Non è reversibile!')) {
+                workDays = [];
+                updateWorkDaysList();
+                populateMonthSelector();
+                updateSummary();
+                generateCalendar();
+                autoSaveWorkDays();
+                showMessage('Dati cancellati', 'success');
+            }
+        }
+
         function importFromExcelFixed() {
             const input = document.createElement('input');
             input.type = 'file';
@@ -2797,8 +2680,8 @@
                             processImportedDataFixed(jsonData);
                             
                         } catch (error) {
-                            console.error('Errore nella lettura del file Excel:', error);
-                            showMessage('Errore nella lettura del file Excel: ' + error.message, 'error');
+                            console.error('Errore import:', error);
+                            showMessage('Errore lettura Excel', 'error');
                         }
                     };
                     reader.readAsArrayBuffer(file);
@@ -2809,7 +2692,7 @@
 
         function processImportedDataFixed(data) {
             if (!data || data.length === 0) {
-                showMessage('File Excel vuoto o formato non riconosciuto', 'error');
+                showMessage('File vuoto', 'error');
                 return;
             }
 
@@ -2821,15 +2704,7 @@
                 try {
                     const mappedRow = mapYourExcelFormat(row, index);
                     
-                    if (mappedRow && mappedRow.date && mappedRow.entryTime && mappedRow.exitTime) {
-                        const existingIndex = workDays.findIndex(day => day.date === mappedRow.date);
-                        if (existingIndex !== -1) {
-                            workDays.splice(existingIndex, 1);
-                        }
-                        
-                        workDays.push(mappedRow);
-                        importedCount++;
-                    } else if (mappedRow && mappedRow.date && mappedRow.entryTime && !mappedRow.exitTime) {
+                    if (mappedRow && mappedRow.date && mappedRow.entryTime) {
                         const existingIndex = workDays.findIndex(day => day.date === mappedRow.date);
                         if (existingIndex !== -1) {
                             workDays.splice(existingIndex, 1);
@@ -2847,20 +2722,13 @@
 
             workDays.sort((a, b) => new Date(a.date) - new Date(b.date));
             
-            updateTable();
+            updateWorkDaysList();
             populateMonthSelector();
             updateSummary();
             generateCalendar();
             autoSaveWorkDays();
             
-            let message = `✅ Import completato: ${importedCount} righe importate`;
-            if (skippedCount > 0) {
-                message += `, ${skippedCount} saltate`;
-            }
-            if (errorCount > 0) {
-                message += `, ${errorCount} errori`;
-            }
-            showMessage(message, importedCount > 0 ? 'success' : 'error');
+            showMessage(`Importati: ${importedCount} | Saltati: ${skippedCount}`, importedCount > 0 ? 'success' : 'error');
         }
 
         function mapYourExcelFormat(row, rowIndex) {
@@ -2871,9 +2739,7 @@
             const uscita = row['Uscita'];
             const note = row['Note'] || '';
 
-            if (!data) {
-                return null;
-            }
+            if (!data) return null;
 
             let date;
             if (typeof data === 'string' && data.includes('/')) {
@@ -2886,18 +2752,14 @@
                 }
             }
 
-            if (!date) {
-                return null;
-            }
+            if (!date) return null;
 
             const entryTime = cleanTimeString(entrata);
             const exitTime = cleanTimeString(uscita);
             const breakStart = cleanTimeString(pausa);
             const breakEnd = cleanTimeString(rientro);
 
-            if (!entryTime) {
-                return null;
-            }
+            if (!entryTime) return null;
 
             if (entryTime && exitTime) {
                 const currentConfig = {
@@ -2968,19 +2830,11 @@
         }
 
         function cleanTimeString(timeStr) {
-            if (!timeStr || typeof timeStr !== 'string') {
-                return '';
-            }
+            if (!timeStr || typeof timeStr !== 'string') return '';
             
             const cleaned = timeStr.trim();
-            
-            if (cleaned.match(/^\d{1,2}:\d{2}$/)) {
-                return cleaned;
-            }
-            
-            if (cleaned === '' || cleaned === '-' || cleaned === '--') {
-                return '';
-            }
+            if (cleaned.match(/^\d{1,2}:\d{2}$/)) return cleaned;
+            if (cleaned === '' || cleaned === '-' || cleaned === '--') return '';
             
             return cleaned;
         }
@@ -3010,12 +2864,12 @@
 
         function showMessage(text, type) {
             const messageDiv = document.getElementById('message');
-            messageDiv.className = type;
+            messageDiv.className = `message ${type}`;
             messageDiv.textContent = text;
             setTimeout(() => {
                 messageDiv.textContent = '';
                 messageDiv.className = '';
-            }, 5000);
+            }, 3000);
         }
 
         function saveConfig() {
@@ -3028,9 +2882,9 @@
             
             try {
                 localStorage.setItem('timesheetConfig', JSON.stringify(config));
-                showMessage('✅ Configurazione salvata', 'success');
+                showMessage('Config salvata', 'success');
             } catch (e) {
-                showMessage('❌ Salvataggio non disponibile', 'error');
+                showMessage('Errore salvataggio', 'error');
             }
         }
 
@@ -3051,7 +2905,7 @@
                     return true;
                 }
             } catch (e) {
-                console.log('Errore caricamento configurazione:', e);
+                console.log('Errore caricamento config:', e);
             }
             return false;
         }
@@ -3067,8 +2921,7 @@
                 
                 try {
                     localStorage.setItem('timesheetConfig', JSON.stringify(config));
-                } catch (e) {
-                }
+                } catch (e) {}
             }, 500);
         }
 
@@ -3089,8 +2942,7 @@
             setTimeout(() => {
                 try {
                     localStorage.setItem('timesheetWorkDays', JSON.stringify(workDays));
-                } catch (e) {
-                }
+                } catch (e) {}
             }, 100);
         }
     </script>
