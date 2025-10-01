@@ -3,7 +3,7 @@
 App web per tracciare orari di lavoro, straordinari e compensi.
 
 ## 🚀 Usa l'app
-[Apri l'applicazione](https://tuousername.github.io/gestione-orari-lavoro/)
+[Apri l'applicazione](https://gugli40.github.io/gestione-orari-lavoro/)
 
 ## ✨ Funzionalità
 - Tracciamento orari con calcolo automatico
