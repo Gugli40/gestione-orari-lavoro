@@ -91,8 +91,8 @@
         .card {
             background: var(--bg-card);
             border-radius: 16px;
-            padding: 16px;
-            margin: 12px 12px;
+            padding: 16px 12px;
+            margin: 12px 8px;
             box-shadow: var(--shadow);
         }
 
@@ -145,6 +145,17 @@
             background: var(--bg-card);
             transition: all 0.2s;
             box-sizing: border-box;
+        }
+
+        /* Fix specifico per campo date su iOS */
+        input[type="date"] {
+            -webkit-appearance: none;
+            appearance: none;
+            min-height: 48px;
+        }
+
+        input[type="date"]::-webkit-date-and-time-value {
+            text-align: center;
         }
 
         .form-input:focus, .form-select:focus {
