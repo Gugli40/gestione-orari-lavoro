@@ -91,8 +91,8 @@
         .card {
             background: var(--bg-card);
             border-radius: 16px;
-            padding: 20px;
-            margin: 12px 16px;
+            padding: 16px;
+            margin: 12px 12px;
             box-shadow: var(--shadow);
         }
 
@@ -138,12 +138,13 @@
 
         .form-input, .form-select {
             width: 100%;
-            padding: 16px;
+            padding: 14px 12px;
             border: 2px solid var(--border);
             border-radius: 12px;
             font-size: 16px;
             background: var(--bg-card);
             transition: all 0.2s;
+            box-sizing: border-box;
         }
 
         .form-input:focus, .form-select:focus {
@@ -156,17 +157,18 @@
         .time-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
             margin: 16px 0;
         }
 
         .time-card {
             background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
             border: 2px solid var(--border);
-            border-radius: 16px;
-            padding: 12px;
+            border-radius: 12px;
+            padding: 10px 8px;
             text-align: center;
             min-width: 0;
+            overflow: hidden;
         }
 
         .time-card.active {
@@ -175,21 +177,21 @@
         }
 
         .time-label {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: block;
         }
 
         .time-card input[type="time"] {
             width: 100%;
-            padding: 10px 8px;
+            padding: 8px 4px;
             border: none;
             border-radius: 8px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             text-align: center;
             background: white;
